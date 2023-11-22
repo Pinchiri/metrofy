@@ -11,6 +11,8 @@ import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 
 import { getStorage } from "firebase/storage";
 
+import { createNeo4jUser } from "./neo4j";
+
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_REACT_APP_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_REACT_APP_AUTH_DOMAIN,
@@ -35,6 +37,8 @@ export const signInWithGooglePopup = () => signInWithPopup(auth, provider);
 export const db = getFirestore(firebaseApp);
 export const storage = getStorage(firebaseApp);
 
+
+
 export const createUserDocumentFromAuth = async (
   userAuth,
   additionalInformation = {}
@@ -58,6 +62,7 @@ export const createUserDocumentFromAuth = async (
         typeUser,
         ...additionalInformation,
       });
+      await createNeo4jUser(displayName, email);
     } catch (error) {
       console.log("Error creando el usuario", error.message);
     }
