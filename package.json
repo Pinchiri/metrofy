@@ -11,6 +11,8 @@
   "dependencies": {
     "@heroicons/react": "^2.0.18",
     "daisyui": "^4.4.2",
+    "firebase": "^10.6.0",
+    "neo4j-driver": "^5.14.0",
     "next": "14.0.3",
     "react": "^18",
     "react-dom": "^18"
