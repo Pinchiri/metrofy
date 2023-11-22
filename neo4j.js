@@ -2,8 +2,8 @@ import neo4j from 'neo4j-driver';
 
 // CONFIGURACIÓN DE LA CONEXIÓN A NEO4J
 const driver = neo4j.driver( 
-    'neo4j+s://fa40c88e.databases.neo4j.io:7687',
-    neo4j.auth.basic('neo4j','pQKi3ZINQJMOrACnRlIURILhhonWLOK0HNg005r0s3U')
+    process.env.NEXT_PUBLIC_REACT_NEO4J_DRIVER,
+    neo4j.auth.basic(process.env.NEXT_PUBLIC_REACT_NEO4J_USER, process.env.NEXT_PUBLIC_REACT_NEO4J_PASSWORD)
 );
 export default driver;
 
