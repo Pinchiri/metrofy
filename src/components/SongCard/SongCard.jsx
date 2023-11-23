@@ -13,7 +13,6 @@ const SongCard = ({
   const [isFavorite, setIsFavorite] = useState(favorite);
 
   const handleFavorite = () => {
-    //TODO - Implement Backend functionality
     setIsFavorite(!isFavorite);
   };
 

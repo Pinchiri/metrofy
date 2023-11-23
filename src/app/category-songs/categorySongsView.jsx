@@ -1,14 +1,15 @@
-"use client";
-import React, { useEffect, useState } from 'react';
-import {useSearchParams } from "next/navigation";
-import { getSongsByGenderNeo4J } from '../../../neo4j';
 
-const CategorySongsView = ({songs}) => {
+const CategorySongsView = ({ songs, handleLike, handleUnlike}) => {
+
     return (
         <div>
-             {songs.map((song, index) => (
-                <div key={index}>
-                    {song.title} - {song.artist}
+            {songs.map((song, index) => (
+                <div className="flex flex-row gap-4" key={index}>
+                    <p>{song.title} - {song.artist} </p>
+                    {song.favorited
+                        ? <button className="error text-white" onClick={() => handleUnlike(song)}> Eliminar </button>
+                        : <button className="primary text-black" onClick={() => handleLike(song)}> LIKE </button>
+                    }
                 </div>
             ))}
         </div>
