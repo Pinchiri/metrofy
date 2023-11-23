@@ -2,8 +2,15 @@
 import React, { useState } from "react";
 import SongCardView from "./SongCardView";
 
-const SongCard = ({ title, gender, artist, duration, rating }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
+const SongCard = ({
+  title,
+  gender,
+  artist,
+  duration,
+  rating,
+  favorite = false,
+}) => {
+  const [isFavorite, setIsFavorite] = useState(favorite);
 
   const handleFavorite = () => {
     //TODO - Implement Backend functionality
