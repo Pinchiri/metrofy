@@ -12,7 +12,7 @@ const CategorySongs = () => {
     const { currentUser } = useUserData();
     const [songs, setSongs] = useState([]);
     const [enhancedSongs, setEnhancedSongs] = useState(songs);
-   
+
     useEffect(() => {
         setEnhancedSongs(songs);
     }, [songs]);

@@ -116,3 +116,184 @@ export const getSongsWithFavoritedStatus = async (email) => {
     }
 }
 
+// FETCH RECOMMENDED SONGS BASED ON FAVORITE GENRE
+export const getRecommendedSongsBasedOnFavoriteGenre = async (userEmail) => {
+    const session = driver.session();
+    try {
+        // Paso 1: Encontrar el género más escuchado basado en las canciones favoritas
+        const favoriteGenreResult = await session.run(
+            `MATCH (u:User {email: $email})-[:FAVORITED]->(s:Cancion)-[:BELONGS_TO]->(g:Genre)
+             RETURN g.name AS genre, COUNT(*) AS count
+             ORDER BY count DESC
+             LIMIT 1;`,
+            { email: userEmail }
+        );
+        const favoriteGenre = favoriteGenreResult.records[0]?.get('genre');
+        if (!favoriteGenre) {
+            return { genre: null, songs: [] };
+        }
+
+        // Paso 2: Obtener canciones recomendadas de ese género
+        const recommendedSongsResult = await session.run(
+            `MATCH (s:Cancion)-[:BELONGS_TO]->(g:Genre {name: $genre})
+             RETURN s.id AS id, s.title AS title, s.artist AS artist, s.duration AS duration
+             LIMIT 10;`, 
+            { genre: favoriteGenre }
+        );
+
+        const recommendedSongs = recommendedSongsResult.records.map(record => ({
+            id: record.get('id'),
+            title: record.get('title'),
+            artist: record.get('artist'),
+            duration: record.get('duration')
+        }));
+
+        return { genre: favoriteGenre, songs: recommendedSongs };
+    } catch (error) {
+        console.error('Error al obtener canciones recomendadas:', error);
+        return { genre: null, songs: [] };
+    } finally {
+        await session.close();
+    }
+};
+
+// FETCH RECOMMENDED SONGS BASED ON SECOND FAVORITE GENRE
+export const getRecommendedSongsBasedOnSecondFavoriteGenre = async (userEmail) => {
+    const session = driver.session();
+    try {
+        // Encontrar el segundo género más escuchado
+        const secondFavoriteGenreResult = await session.run(
+            `MATCH (u:User {email: $email})-[:FAVORITED]->(s:Cancion)-[:BELONGS_TO]->(g:Genre)
+             RETURN g.name AS genre, COUNT(*) AS count
+             ORDER BY count DESC
+             SKIP 1 LIMIT 1;`, // Aquí se cambió a SKIP 1 LIMIT 1
+            { email: userEmail }
+        );
+        const secondFavoriteGenre = secondFavoriteGenreResult.records[0]?.get('genre');
+        if (!secondFavoriteGenre) {
+            return { genre: null, songs: [] };
+        }
+
+        // Obtener canciones recomendadas de ese género
+        const recommendedSongsResult = await session.run(
+            `MATCH (s:Cancion)-[:BELONGS_TO]->(g:Genre {name: $genre})
+             RETURN s.id AS id, s.title AS title, s.artist AS artist, s.duration AS duration
+             LIMIT 10;`, 
+            { genre: secondFavoriteGenre }
+        );
+
+        const recommendedSongs = recommendedSongsResult.records.map(record => ({
+            id: record.get('id'),
+            title: record.get('title'),
+            artist: record.get('artist'),
+            duration: record.get('duration')
+        }));
+
+        return { genre: secondFavoriteGenre, songs: recommendedSongs };
+    } catch (error) {
+        console.error('Error al obtener canciones recomendadas:', error);
+        return { genre: null, songs: [] };
+    } finally {
+        await session.close();
+    }
+};
+
+// FETCH RECOMMENDED SONGS BASED ON FAVORITE ARTIST
+export const getRecommendedSongsBasedOnFavoriteArtist = async (userEmail) => {
+    const session = driver.session();
+    try {
+        // Encontrar el artista más escuchado por el usuario
+        const favoriteArtistResult = await session.run(
+            `MATCH (u:User {email: $email})-[:FAVORITED]->(s:Cancion)-[:PERFORMED_BY]->(a:Artist)
+             RETURN a.name_artist AS artist, COUNT(*) AS count
+             ORDER BY count DESC
+             LIMIT 1;`, 
+            { email: userEmail }
+        );
+        const favoriteArtist = favoriteArtistResult.records[0]?.get('artist');
+        if (!favoriteArtist) {
+            return { artist: null, songs: [] };
+        }
+
+        // Obtener canciones recomendadas de ese artista
+        const recommendedSongsResult = await session.run(
+            `MATCH (s:Cancion)-[:PERFORMED_BY]->(a:Artist {name_artist: $artist})
+             RETURN s.id AS id, s.title AS title, s.artist AS artist, s.duration AS duration
+             LIMIT 10;`,
+            { artist: favoriteArtist }
+        );
+
+        const recommendedSongs = recommendedSongsResult.records.map(record => ({
+            id: record.get('id'),
+            title: record.get('title'),
+            artist: record.get('artist'),
+            duration: record.get('duration')
+        }));
+
+        return { artist: favoriteArtist, songs: recommendedSongs };
+    } catch (error) {
+        console.error('Error al obtener canciones recomendadas:', error);
+        return { artist: null, songs: [] };
+    } finally {
+        await session.close();
+    }
+};
+
+// FETCH RECOMMENDED SONGS BASED ON COUNTRY
+export async function getRecommendedSongsBasedOnCountry(userEmail) {
+    const session = driver.session();
+    try {
+        // Obtener el país donde vive el usuario
+        const userCountryResult = await session.run(
+            `MATCH (u:User {email: $email})-[:LIVES_IN]->(c:Country)
+             RETURN c.country AS country`,
+            { email: userEmail }
+        );
+        const userCountry = userCountryResult.records[0]?.get('country');
+
+        // Verificar si se encontró el país
+        if (!userCountry) {
+            return { country: null, genre: null, songs: [] };
+        }
+
+        // Encontrar un género al azar en el país del usuario
+        const randomGenreResult = await session.run(
+            `MATCH (g:Genre)<-[:POPULAR_IN]-(c:Country {country: $country})
+             WITH g, rand() AS random
+             ORDER BY random
+             LIMIT 1
+             RETURN g.name AS genre`,
+            { country: userCountry }
+        );
+        const randomGenre = randomGenreResult.records[0]?.get('genre');
+
+        // Verificar si se encontró el género
+        if (!randomGenre) {
+            return { country: userCountry, genre: null, songs: [] };
+        }
+
+        // Obtener canciones recomendadas de ese género en el país del usuario
+        const recommendedSongsResult = await session.run(
+            `MATCH (s:Cancion)-[:BELONGS_TO]->(g:Genre {name: $genre})
+             RETURN s.id AS id, s.title AS title, s.artist AS artist, s.duration AS duration
+             LIMIT 10;`,
+            { genre: randomGenre }
+        );
+
+        // Construir la lista de canciones recomendadas
+        const recommendedSongs = recommendedSongsResult.records.map(record => ({
+            id: record.get('id'),
+            title: record.get('title'),
+            artist: record.get('artist'),
+            duration: record.get('duration')
+        }));
+
+        // Devolver resultados
+        return { country: userCountry, genre: randomGenre, songs: recommendedSongs };
+    } catch (error) {
+        console.error('Error al obtener canciones recomendadas:', error);
+        return { country: null, genre: null, songs: [], error: error.message };
+    } finally {
+        await session.close();
+    }
+}
