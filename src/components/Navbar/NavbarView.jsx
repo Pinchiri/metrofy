@@ -53,8 +53,8 @@ const NavbarView = ({ sidebarOptions }) => {
           className="drawer-overlay"
         ></label>
         <ul className="menu p-4 w-80 min-h-full bg-base-200">
-          {sidebarOptions.map((option) => (
-            <li>
+          {sidebarOptions.map((option, index) => (
+            <li key={index}>
               <Link href={option.link}>{option.label}</Link>
             </li>
           ))}
