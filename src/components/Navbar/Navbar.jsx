@@ -1,6 +1,6 @@
 import React from "react";
 import NavbarView from "./NavbarView";
-import { genresURL, myFavoritesURL } from "@/constants/urls";
+import { exploreURL, genresURL, myFavoritesURL } from "@/constants/urls";
 
 const Navbar = () => {
   const sidebarOptions = [

@@ -12,7 +12,7 @@ const SongCardView = ({
   handleFavorite,
 }) => {
   return (
-    <div className="card card-compact lg:card-normal w-50 lg:w-70 bg-primary text-primary-content">
+    <div className="card card-compact lg:card-normal w-50 lg:w-70 bg-primary text-primary-content z-0">
       <div className="card-body flex flex-row gap-28 lg:gap-24">
         <div className="flex flex-col font-semibold">
           <h2 className="card-title font-bold">{title}</h2>

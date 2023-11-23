@@ -1,10 +1,11 @@
 import React from "react";
 import UserAvatar from "../UserAvatar/UserAvatar";
 import Link from "next/link";
+import { homeURL } from "@/constants/urls";
 
 const NavbarView = ({ sidebarOptions }) => {
   return (
-    <div className="drawer">
+    <div className="drawer z-20">
       <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content flex flex-col">
         {/* SECTION - Navbar */}
@@ -31,12 +32,13 @@ const NavbarView = ({ sidebarOptions }) => {
             </label>
           </div>
           <div className="flex-1">
-            <a
+            <Link
               htmlFor="my-drawer"
               className="btn btn-ghost text-xl drawer-button"
+              href={homeURL}
             >
               Metrofy
-            </a>
+            </Link>
           </div>
           <div className="flex-none">
             <UserAvatar />

@@ -1,3 +1,3 @@
 export const homeURL = "/";
-export const genresURL = "";
+export const genresURL = "/explore";
 export const myFavoritesURL = "";
