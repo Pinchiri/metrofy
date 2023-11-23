@@ -1,20 +1,18 @@
-"use client";
-
 const LoginView = ({ logGoogleUser }) => {
   return (
     <>
       
-      <div className="ml-6  mt-20 lg:pt-8 flex flex-col items-center justify-center gap-6">
+      <div className="ml-6 mt-20 text-center px-4 lg:pt-8 flex flex-col items-center justify-center gap-12">
        
-        <h1 className="font-['B612'] font-bold pt-5 text-3xl">
-          MetroFY
+        <h1 className="font-['Inter'] font-bold pt-5 text-5xl">
+          Inicia sesión en Metrofy
         </h1>
 
         <button
-          className="bg-manz-200 p-4 rounded-lg font-bold hover:scale-105 transition-all"
+          className="bg-manz-200 text-black py-4 px-8 rounded-3xl font-bold hover:scale-105 transition-all"
           onClick={logGoogleUser}
         >
-           Inicia sesión en Spotify
+           Continuar con Google
         </button>
         <p className=" lg:w-1/4 text-xl text-center">
           {" "}

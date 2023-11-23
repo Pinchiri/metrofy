@@ -23,7 +23,7 @@ export default function Login () {
             if (docSnapshot.exists()) {
                 const userData = docSnapshot.data();
                 setCurrentUser(userData);
-                router.push("/");
+                router.push("/explore");
             } 
         }
         catch (error) {
