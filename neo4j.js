@@ -9,7 +9,7 @@ export default driver;
 
 const session = driver.session();
 
-//FUNCIÓN PARA CREAR UN USUARIO
+//CREATE NEW USER 
 export const createNeo4jUser = async (name, email) => {
     try {
         await session.run(
@@ -21,7 +21,7 @@ export const createNeo4jUser = async (name, email) => {
     };
   }
 
-//FUNCION PARA TRAERNOS TODOS LOS GENDERS
+//FETCH ALL GENDER CATEGORIES
 export const getCategoriesNeo4J = async () => {
 const session = driver.session();
 try {
@@ -36,18 +36,83 @@ try {
 }
 };
 
-// FUNCION PARA TRAERNOS LAS CANCIONES QUE ESTAN IMPLICADAS EN LA ARISTA BELONGS_TO DE UN GENDER 
-export const getSongsByGenderNeo4J = async (genreName) => {
+// FETCH SONGS BELONGS_TO GENDER AND CHECK IF FAVORITED BY USER
+export const getSongsByGenderNeo4J = async (genreName, userEmail) => {
     const session = driver.session();
     try {
         const result = await session.run(
-            'MATCH (c:Cancion)-[:BELONGS_TO]->(g:Genre {name: $genreName}) RETURN c',
-            { genreName }
+            `MATCH (c:Cancion)-[:BELONGS_TO]->(g:Genre {name: $genreName})
+             OPTIONAL MATCH (u:User {email: $userEmail})-[:FAVORITED]->(c)
+             RETURN c, EXISTS((u)-[:FAVORITED]->(c)) AS favorited`,
+            { genreName, userEmail }
         );
-        return result.records.map(record => record.get('c').properties);
+        return result.records.map(record => {
+            const song = record.get('c').properties;
+            song.favorited = record.get('favorited');
+            return song;
+        });
     } catch (error) {
-        console.error('Error al obtener canciones por género:', error);
+        console.error('Error al obtener canciones por género y estado favorito:', error);
     } finally {
         await session.close();
     }
 }
+
+
+// CREATE USER FAVORITE SONG
+export const createFavoritedRelationship = async (email, songId) => {
+    const session = driver.session();
+    try {
+        const result = await session.run(
+            `MATCH (u:User {email: $email}), (s:Cancion {id: $songId})
+             MERGE (u)-[f:FAVORITED]->(s)
+             RETURN f;`,
+            { email, songId }
+        );
+        return result.records.map(record => record.get('f').properties);
+    } catch (error) {
+        console.error('Error al crear la relación FAVORITED:', error);
+    } finally {
+        await session.close();
+    }
+}
+
+// DELETE USER FAVORITE SONG 
+export const deleteFavoritedRelationship = async (email, songId) => {
+    const session = driver.session();
+    try {
+        await session.run(
+            `MATCH (u:User {email: $email})-[f:FAVORITED]->(s:Cancion {id: $songId})
+             DELETE f;`,
+            { email, songId }
+        );
+    } catch (error) {
+        console.error('Error al eliminar la relación FAVORITED:', error);
+    } finally {
+        await session.close();
+    }
+}
+
+// FETCH USER FAVORITE SONG 
+export const getSongsWithFavoritedStatus = async (email) => {
+    const session = driver.session();
+    try {
+        const result = await session.run(
+            `MATCH (c:Cancion)
+             OPTIONAL MATCH (u:User {email: $email})-[:FAVORITED]->(c)
+             RETURN c, EXISTS((u)-[:FAVORITED]->(c)) AS favorited`,
+            { email }
+        );
+        return result.records.map(record => {
+            return {
+                ...record.get('c').properties,
+                favorited: record.get('favorited')
+            };
+        });
+    } catch (error) {
+        console.error('Error al obtener canciones y estado favorito:', error);
+    } finally {
+        await session.close();
+    }
+}
+
