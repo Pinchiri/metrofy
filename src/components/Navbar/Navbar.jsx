@@ -1,17 +1,19 @@
 import React from "react";
-import UserAvatar from "../UserAvatar/UserAvatar";
+import NavbarView from "./NavbarView";
+import { genresURL, myFavoritesURL } from "@/constants/urls";
 
 const Navbar = () => {
-  return (
-    <div className="navbar bg-base-300">
-      <div className="flex-1">
-        <a className="btn btn-ghost text-xl">Metrofy</a>
-      </div>
-      <div className="flex-none">
-        <UserAvatar />
-      </div>
-    </div>
-  );
+  const sidebarOptions = [
+    {
+      label: "Genres",
+      link: genresURL,
+    },
+    {
+      label: "My Favorites",
+      link: myFavoritesURL,
+    },
+  ];
+  return <NavbarView sidebarOptions={sidebarOptions} />;
 };
 
 export default Navbar;
