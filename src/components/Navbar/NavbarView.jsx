@@ -2,8 +2,37 @@ import React from "react";
 import UserAvatar from "../UserAvatar/UserAvatar";
 import Link from "next/link";
 import { homeURL } from "@/constants/urls";
+import Button from "../Button/Button";
+import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 
-const NavbarView = ({ sidebarOptions }) => {
+const NavbarView = ({
+  sidebarOptions,
+  isUserLoading,
+  handleAuth,
+  profilePicture,
+  user,
+}) => {
+  const renderAvatar = () => {
+    if (isUserLoading) {
+      return <LoadingSpinner color="primary" extraStyles="pr-10" />;
+    }
+
+    if (user) {
+      return (
+        <UserAvatar handleLogout={handleAuth} profilePicture={profilePicture} />
+      );
+    }
+
+    return (
+      <Button
+        text="Iniciar sesión"
+        size="sm"
+        color="primary"
+        extraStyles="text-[10px] btn-xs md:btn-sm md:text-sm px-2 lg:px-4 font-bold rounded-lg hover:scale-105 whitespace-nowrap"
+        onClick={handleAuth}
+      />
+    );
+  };
   return (
     <div className="drawer z-20">
       <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
@@ -40,9 +69,7 @@ const NavbarView = ({ sidebarOptions }) => {
               Metrofy
             </Link>
           </div>
-          <div className="flex-none">
-            <UserAvatar />
-          </div>
+          <div className="flex-none">{renderAvatar()}</div>
         </div>
         {/* !SECTION - Navbar */}
       </div>

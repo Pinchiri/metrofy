@@ -1,19 +1,44 @@
+"use client";
 import React from "react";
 import NavbarView from "./NavbarView";
-import { exploreURL, genresURL, myFavoritesURL } from "@/constants/urls";
+import { exploreURL, genresURL, homeURL, loginURL } from "@/constants/urls";
+import { useUserData } from "@/context/userContext";
+import { signOutUser } from "../../../firebase";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
+  const { currentUser, isUserLoading, setCurrentUser } = useUserData();
+  const router = useRouter();
+
+  const handleAuth = async () => {
+    if (currentUser) {
+      try {
+        await signOutUser();
+        setCurrentUser(null);
+        router.push(homeURL);
+      } catch (error) {
+        console.error("Error during logout", error);
+      }
+    } else {
+      router.push(loginURL);
+    }
+  };
+
   const sidebarOptions = [
     {
-      label: "Genres",
+      label: "Géneros",
       link: genresURL,
     },
-    {
-      label: "My Favorites",
-      link: myFavoritesURL,
-    },
   ];
-  return <NavbarView sidebarOptions={sidebarOptions} />;
+  return (
+    <NavbarView
+      sidebarOptions={sidebarOptions}
+      handleAuth={handleAuth}
+      profilePicture={currentUser?.photoURL}
+      user={currentUser}
+      isUserLoading={isUserLoading}
+    />
+  );
 };
 
 export default Navbar;

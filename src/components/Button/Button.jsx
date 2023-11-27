@@ -2,10 +2,10 @@ import React from "react";
 
 const Button = ({ color, size, text, extraStyles = "", onClick }) => {
   const colors = {
-    manz: "btn-primary",
-    masala: "btn-secondary",
-    stratos: "btn-accent",
-    oxford: "btn-neutral",
+    primary: "btn-primary",
+    secondary: "btn-secondary",
+    accent: "btn-accent",
+    neutral: "btn-neutral",
   };
 
   const sizes = {
