@@ -10,6 +10,7 @@ import {
 import ExploreView from "./exploreView";
 import { useUserData } from "@/context/userContext";
 import RecommendedSongsView from "./recommendedSongsView";
+import Divider from "@/components/Divider/Divider";
 
 export default function Explore() {
   const [categories, setCategories] = useState([]);
@@ -48,6 +49,8 @@ export default function Explore() {
         setFavoriteGenre(firstGenre);
         setRecommendedSongs(firstGenreSongs);
 
+        console.log(firstGenreSongs);
+
         // SEGUNDO GENERO MAS ESCUCHADO
         const { genre: secondGenre, songs: secondGenreSongs } =
           await getRecommendedSongsBasedOnSecondFavoriteGenre(
@@ -83,29 +86,40 @@ export default function Explore() {
 
   return (
     <>
-      <div className="my-10">
+      <div className="w-full flex flex-col items-center justify-center my-10">
         <ExploreView categories={categories} />
+
         <RecommendedSongsView
           category="genre"
+          currentUser={currentUser}
           categoryName={favoriteGenre}
           songs={recommendedSongs}
         />
-        <br />
+
+        <Divider color="none" />
+
         <RecommendedSongsView
           category="genre"
+          currentUser={currentUser}
           categoryName={secondFavoriteGenre}
           songs={secondRecommendedSongs}
         />
-        <br />
+
+        <Divider color="none" />
+
         <RecommendedSongsView
           category="artist"
+          currentUser={currentUser}
           categoryName={favoriteArtist}
           songs={artistRecommendedSongs}
         />
-        <br />
+
+        <Divider color="none" />
+
         <RecommendedSongsView
           category="countryGenre"
           country={country}
+          currentUser={currentUser}
           countryGenre={countryGenre}
           listSongs={listSongs}
         />
