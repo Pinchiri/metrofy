@@ -10,11 +10,13 @@ const Navbar = () => {
   const { currentUser, isUserLoading, setCurrentUser } = useUserData();
   const router = useRouter();
 
+  console.log(currentUser);
+
   const handleAuth = async () => {
     if (currentUser) {
       try {
         await signOutUser();
-        setCurrentUser(null);
+        setCurrentUser({});
         router.push(homeURL);
       } catch (error) {
         console.error("Error during logout", error);

@@ -28,7 +28,7 @@ const NavbarView = ({
         text="Iniciar sesión"
         size="sm"
         color="primary"
-        extraStyles="text-[10px] btn-xs md:btn-sm md:text-sm px-2 lg:px-4 font-bold rounded-lg hover:scale-105 whitespace-nowrap"
+        extraStyles="text-[10px] btn-xs md:btn-sm md:text-sm px-2 lg:px-4 font-bold hover:scale-105 whitespace-nowrap"
         onClick={handleAuth}
       />
     );

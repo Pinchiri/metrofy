@@ -1,23 +1,21 @@
 const LoginView = ({ logGoogleUser }) => {
   return (
     <>
-      
       <div className="ml-6 mt-20 text-center px-4 lg:pt-8 flex flex-col items-center justify-center gap-12">
-       
         <h1 className="font-['Inter'] font-bold pt-5 text-5xl">
           Inicia sesión en Metrofy
         </h1>
 
         <button
-          className="bg-manz-200 text-black py-4 px-8 rounded-3xl font-bold hover:scale-105 transition-all"
+          className="bg-primary text-black py-4 px-8 rounded-3xl font-bold hover:scale-105 transition-all"
           onClick={logGoogleUser}
         >
-           Continuar con Google
+          Continuar con Google
         </button>
         <p className=" lg:w-1/4 text-xl text-center">
           {" "}
-          Escucha los últimos temas musicales 
-          más recientes, mantente siempre a la moda {" "}
+          Escucha los últimos temas musicales más recientes, mantente siempre a
+          la moda{" "}
         </p>
       </div>
     </>

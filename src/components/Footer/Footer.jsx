@@ -6,7 +6,7 @@ const Footer = () => {
       <aside className="items-center grid-flow-col">
         <p className="text-xl font-semibold mr-10">Metrofy</p>
 
-        <p>Copyright © 2023 - All right reserved</p>
+        <p>Copyright © 2023 - All rights reserved</p>
       </aside>
       <nav className="grid-flow-col gap-4 md:place-self-center md:justify-self-end">
         <a className="cursor-pointer hover:scale-105 transition-all">

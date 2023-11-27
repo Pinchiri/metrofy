@@ -3,20 +3,20 @@ import React, { createContext, useState, useEffect, useContext } from "react";
 import { onAuthStateChangedListener } from "../../firebase.js";
 
 export const UserContext = createContext({
-  currentUser: null,
+  currentUser: {},
   setCurrentUser: () => {},
   isUserLoading: false,
 });
 
 export const UserProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState({});
   const [isUserLoading, setIsUserLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChangedListener(async (user) => {
       setIsUserLoading(true);
-      if ( user ) {
-        setCurrentUser({ ...user});
+      if (user) {
+        setCurrentUser({ ...user });
       }
       setIsUserLoading(false);
     });

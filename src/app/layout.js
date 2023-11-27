@@ -22,17 +22,11 @@ export default function RootLayout({ children }) {
           rel="stylesheet"
         />
       </head>
-      <body>
+      <body className="flex flex-col min-h-screen">
         <UserProvider>
-          <div className="">
-            <div className="w-full max-w-screen mb-14">
-              <Navbar />
-            </div>
-            <div className="z-0">{children}</div>
-            <div className="w-full max-w-screen">
-              <Footer />
-            </div>
-          </div>
+          <Navbar />
+          <main className="flex-grow">{children}</main>
+          <Footer />
         </UserProvider>
       </body>
     </html>
