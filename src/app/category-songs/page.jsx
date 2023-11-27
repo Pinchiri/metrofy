@@ -4,7 +4,7 @@ import {useSearchParams } from "next/navigation";
 import { getSongsByGenderNeo4J } from '../../../neo4j';
 import CategorySongsView from './categorySongsView';
 import { useUserData } from "@/context/userContext";
-import { createFavoritedRelationship, deleteFavoritedRelationship, getSongsWithFavoritedStatus } from "../../../neo4j";
+import { createFavoritedRelationship, deleteFavoritedRelationship, listenToSong, getSongsWithFavoritedStatus } from "../../../neo4j";
 
 const CategorySongs = () => {
     const searchParams = useSearchParams();
@@ -37,7 +37,12 @@ const CategorySongs = () => {
         setEnhancedSongs(enhancedSongs.map(s => s.id === song.id ? { ...s, favorited: false } : s));
     };
 
-    return <CategorySongsView songs={enhancedSongs} currentUser={currentUser} handleLike={handleLike} handleUnlike={handleUnlike} />;
+    const handleReproduce = async (song) => {
+        console.log("Reproducing song:", song.title);
+        await listenToSong(currentUser?.email, song.id);
+    };
+
+    return <CategorySongsView songs={enhancedSongs} currentUser={currentUser} handleLike={handleLike} handleUnlike={handleUnlike} handleReproduce={handleReproduce} />;
 };
 
 export default CategorySongs;
