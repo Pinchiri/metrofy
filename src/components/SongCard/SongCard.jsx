@@ -16,6 +16,10 @@ const SongCard = ({
     setIsFavorite(!isFavorite);
   };
 
+  const handlePlay = () => {
+    //TODO - Add functionality
+  };
+
   return (
     <SongCardView
       title={title}
@@ -25,6 +29,7 @@ const SongCard = ({
       rating={rating}
       isFavorite={isFavorite}
       handleFavorite={handleFavorite}
+      handlePlay={handlePlay}
     />
   );
 };

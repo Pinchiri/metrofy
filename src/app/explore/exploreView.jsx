@@ -19,7 +19,7 @@ export default function ExploreView({ categories }) {
                 }}
                 key={index}
               >
-                <div className="bg-manz-200 p-8 font-bold text-xl flex justify-center items-center rounded-md transition-transform hover:scale-105 hover:bg-66D36E">
+                <div className="bg-primary p-8 font-bold text-xl flex justify-center items-center rounded-md transition-transform hover:scale-105 hover:bg-66D36E">
                   {category.name}
                 </div>
               </Link>
