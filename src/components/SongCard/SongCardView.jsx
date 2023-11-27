@@ -1,8 +1,7 @@
 import React from "react";
 import { HeartIcon as HeartIconOutline } from "@heroicons/react/24/outline";
-import Rating from "../Rating/Rating";
-
 import { PlayIcon } from "@heroicons/react/24/solid";
+import Rating from "../Rating/Rating";
 
 const SongCardView = ({
   songId,
@@ -33,7 +32,7 @@ const SongCardView = ({
         <div className="flex flex-col">
           <HeartIconOutline
             className={`text-primary-content w-12 hover:scale-105 transition-all cursor-pointer -mt-1 ${
-              isFavorite ? "fill-[#ff0000] text-[#ff0000]" : ""
+              isFavorite ? "fill-[#ff0000] !text-[#ff0000]" : ""
             }`}
             onClick={handleFavorite}
           />

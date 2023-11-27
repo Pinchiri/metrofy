@@ -6,6 +6,8 @@ import {
   deleteFavoritedRelationship,
   listenToSong,
 } from "../../../neo4j";
+import { useToaster } from "../Toaster/hooks/useToaster";
+import Toaster from "../Toaster/Toaster";
 
 const SongCard = ({
   song,
@@ -15,6 +17,8 @@ const SongCard = ({
   id,
 }) => {
   const [isFavorite, setIsFavorite] = useState(song.favorited);
+  const { isVisible, showToast, toasterProperties, setToasterProperties } =
+    useToaster();
 
   const handleFavorite = async () => {
     try {
@@ -28,6 +32,11 @@ const SongCard = ({
             s.id === song.id ? { ...s, favorited: true } : s
           )
         );
+        setToasterProperties({
+          toasterMessage: "Se ha agregado la canción a favoritos!",
+          typeColor: "success",
+        });
+        showToast();
       } else {
         const response = await deleteFavoritedRelationship(
           currentUser?.email,
@@ -39,9 +48,19 @@ const SongCard = ({
             s.id === song.id ? { ...s, favorited: false } : s
           )
         );
+        setToasterProperties({
+          toasterMessage: "Se ha eliminado la canción de favoritos!",
+          typeColor: "success",
+        });
+        showToast();
       }
       setIsFavorite(!isFavorite);
     } catch (error) {
+      setToasterProperties({
+        toasterMessage: "Ha ocurrido un error, por favor inténtelo de nuevo",
+        typeColor: "error",
+      });
+      showToast();
       console.log("error: " + error);
     }
   };
@@ -53,6 +72,13 @@ const SongCard = ({
 
   return (
     <>
+      {isVisible && (
+        <Toaster
+          message={toasterProperties.toasterMessage}
+          isVisible={isVisible}
+          typeColor={toasterProperties.typeColor}
+        />
+      )}
       <SongCardView
         songId={id}
         title={song.title}

@@ -1,16 +1,24 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { getSongsByGenderNeo4J } from "../../../neo4j";
 import CategorySongsView from "./categorySongsView";
 import { useUserData } from "@/context/userContext";
+import { genresURL } from "@/constants/urls";
 
 const CategorySongs = () => {
   const searchParams = useSearchParams();
   const category = searchParams.get("category");
+
   const { currentUser } = useUserData();
+  const router = useRouter();
+
   const [songs, setSongs] = useState([]);
   const [enhancedSongs, setEnhancedSongs] = useState(songs);
+
+  const goBack = () => {
+    router.push(genresURL);
+  };
 
   useEffect(() => {
     setEnhancedSongs(songs);
@@ -35,6 +43,7 @@ const CategorySongs = () => {
       currentUser={currentUser}
       categoryName={category}
       setEnhancedSongs={setEnhancedSongs}
+      goBack={goBack}
     />
   );
 };
