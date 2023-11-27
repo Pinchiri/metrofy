@@ -3,20 +3,22 @@ import React from "react";
 import NavbarView from "./NavbarView";
 import { exploreURL, genresURL, homeURL, loginURL } from "@/constants/urls";
 import { useUserData } from "@/context/userContext";
-import { signOutUser } from "../../../firebase";
+import { auth } from "../../../firebase";
 import { useRouter } from "next/navigation";
+import { signOut } from "firebase/auth";
 
 const Navbar = () => {
-  const { currentUser, isUserLoading, setCurrentUser } = useUserData();
+  const { currentUser, isUserLoading, setCurrentUser, setIsUserLoading } =
+    useUserData();
   const router = useRouter();
-
-  console.log(currentUser);
 
   const handleAuth = async () => {
     if (currentUser) {
       try {
-        await signOutUser();
-        setCurrentUser({});
+        setIsUserLoading(true);
+        await signOut(auth);
+        setCurrentUser(null);
+        setIsUserLoading(false);
         router.push(homeURL);
       } catch (error) {
         console.error("Error during logout", error);
