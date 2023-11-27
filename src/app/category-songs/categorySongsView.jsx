@@ -1,20 +1,30 @@
+import Divider from "@/components/Divider/Divider";
 
-const CategorySongsView = ({ songs, handleLike, handleUnlike, handleReproduce}) => {
+const { default: SongCard } = require("@/components/SongCard/SongCard");
 
-    return (
-        <div>
-            {songs.map((song, index) => (
-                <div className="flex flex-row gap-4" key={index}>
-                    <p>{song.title} - {song.artist} </p>
-                    {song.favorited
-                        ? <button className="error text-white" onClick={() => handleUnlike(song)}> Eliminar </button>
-                        : <button className=" text-white" onClick={() => handleLike(song)}> LIKE </button>
-                    }
-                    <button className="danger text-white" onClick={() => handleReproduce(song)}> BOTON REPRODUCIR -- ARISTA LISTENED </button>
-                </div>
-            ))}
-        </div>
-    );
+const CategorySongsView = ({
+  enhancedSongs,
+  currentUser,
+  categoryName,
+  setEnhancedSongs,
+}) => {
+  return (
+    <div className="w-full flex flex-col items-center justify-center">
+      <h1 className="text-5xl font-bold mt-20 mb-4">{categoryName}</h1>
+      <Divider color="none" />
+      <div className="grid grid-cols-1 lg:grid-cols-2 justify-center items-center gap-4 lg:gap-10 my-10">
+        {enhancedSongs.map((song) => (
+          <SongCard
+            id={song.id}
+            song={song}
+            enhancedSongs={enhancedSongs}
+            currentUser={currentUser}
+            setEnhancedSongs={setEnhancedSongs}
+          />
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export default CategorySongsView;
