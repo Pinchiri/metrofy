@@ -92,6 +92,44 @@ export const deleteFavoritedRelationship = async (email, songId) => {
         await session.close();
     }
 }
+ 
+// CREATE USER LISTEN A SONG
+export const listenToSong = async (email, songId) => {
+    const session = driver.session();
+    try {
+        const result = await session.run(
+            `MATCH (u:User {email: $email}), (s:Cancion {id: $songId})
+             MERGE (u)-[l:LISTENED]->(s)
+             ON CREATE SET l.number_reproductions = 1
+             ON MATCH SET l.number_reproductions = l.number_reproductions + 1
+             RETURN l;`,
+            { email, songId }
+        );
+        return result.records.map(record => record.get('l').properties);
+    } catch (error) {
+        console.error('Error al actualizar la relación LISTENED:', error);
+    } finally {
+        await session.close();
+    }
+}
+
+// CREATE USER FOLLOW ARTIST
+export const createUserFollowsArtist = async (email, artistName) => {
+    const session = driver.session();
+    try {
+        const result = await session.run(
+            `MATCH (u:User {email: $email}), (a:Artist {name_artist: $artistName})
+             MERGE (u)-[f:FOLLOWS]->(a)
+             RETURN f;`,
+            { email, artistName}
+        );
+        return result.records.map(record => record.get('f').properties);
+    } catch (error) {
+        console.error('Error al crear la relación FOLLOWS:', error);
+    } finally {
+        await session.close();
+    }
+}
 
 // FETCH USER FAVORITE SONG 
 export const getSongsWithFavoritedStatus = async (email) => {
@@ -264,13 +302,10 @@ export async function getRecommendedSongsBasedOnCountry(userEmail) {
 
         // Encontrar un género al azar en el país del usuario
         const randomGenreResult = await session.run(
-            `MATCH (g:Genre)<-[:POPULAR_IN]-(c:Country {country: $country})
-             WITH g, rand() AS random
-             ORDER BY random
-             LIMIT 1
-             RETURN g.name AS genre`,
-            { country: userCountry }
-        );
+            `MATCH (g:Genre)-[:POPULAR_IN]->(:Country {country: $country})
+            RETURN g.name AS genre`,
+            {country: userCountry }
+        );        
         const randomGenre = randomGenreResult.records[0]?.get('genre');
 
         // Verificar si se encontró el género
@@ -280,7 +315,7 @@ export async function getRecommendedSongsBasedOnCountry(userEmail) {
 
         // Obtener canciones recomendadas de ese género en el país del usuario
         const recommendedSongsResult = await session.run(
-            `MATCH (s:Cancion)-[:BELONGS_TO]->(g:Genre {name: $genre})
+            `MATCH (s:Cancion)-[:BELONGS_TO]->(g:Genre {name: "$genre"})
              RETURN s.id AS id, s.title AS title, s.artist AS artist, s.duration AS duration
              LIMIT 10;`,
             { genre: randomGenre }
@@ -299,6 +334,37 @@ export async function getRecommendedSongsBasedOnCountry(userEmail) {
     } catch (error) {
         console.error('Error al obtener canciones recomendadas:', error);
         return { country: null, genre: null, songs: [], error: error.message };
+    } finally {
+        await session.close();
+    }
+}
+
+// FETCH RECOMMENDED SONGS BASED ON ARTIST OF TOP SONGS NOT FOLLOWED
+export const getArtistsOfTopSongsNotFollowed = async (userEmail) => {
+    const session = driver.session();
+    try {
+        // Primera parte: Encontrar las canciones más escuchadas
+        const topSongsResult = await session.run(
+            `MATCH (u:User {username: $email})-[l:LISTENED]->(s:Song)
+             WITH s, u, l.number_reproductions AS plays
+             ORDER BY plays DESC
+             LIMIT 10`,
+            { email: userEmail }
+        );
+
+        const topSongs = topSongsResult.records.map(record => record.get('s'));
+
+        // Segunda parte: Encontrar artistas de esas canciones que el usuario no sigue
+        const artistResult = await session.run(
+            `MATCH (s:Song)-[:PERFORMED_BY]->(a:Artist)
+             WHERE s IN $topSongs AND NOT (:User {username: $email})-[:FOLLOWS]->(a)
+             RETURN DISTINCT a`,
+            { topSongs: topSongs, email: userEmail }
+        );
+
+        return artistResult.records.map(record => record.get('a').properties);
+    } catch (error) {
+        console.error('Error al obtener artistas:', error);
     } finally {
         await session.close();
     }

@@ -1,5 +1,5 @@
 
-const CategorySongsView = ({ songs, handleLike, handleUnlike}) => {
+const CategorySongsView = ({ songs, handleLike, handleUnlike, handleReproduce}) => {
 
     return (
         <div>
@@ -8,8 +8,9 @@ const CategorySongsView = ({ songs, handleLike, handleUnlike}) => {
                     <p>{song.title} - {song.artist} </p>
                     {song.favorited
                         ? <button className="error text-white" onClick={() => handleUnlike(song)}> Eliminar </button>
-                        : <button className="primary text-black" onClick={() => handleLike(song)}> LIKE </button>
+                        : <button className=" text-white" onClick={() => handleLike(song)}> LIKE </button>
                     }
+                    <button className="danger text-white" onClick={() => handleReproduce(song)}> BOTON REPRODUCIR -- ARISTA LISTENED </button>
                 </div>
             ))}
         </div>
