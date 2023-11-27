@@ -133,12 +133,13 @@ export const getRecommendedSongsBasedOnFavoriteGenre = async (userEmail) => {
             return { genre: null, songs: [] };
         }
 
-        // Paso 2: Obtener canciones recomendadas de ese género
+        // Paso 2: Obtener canciones recomendadas de ese género que el usuario no ha marcado como favoritas
         const recommendedSongsResult = await session.run(
             `MATCH (s:Cancion)-[:BELONGS_TO]->(g:Genre {name: $genre})
+             WHERE NOT (:User {email: $email})-[:FAVORITED]->(s)
              RETURN s.id AS id, s.title AS title, s.artist AS artist, s.duration AS duration
              LIMIT 10;`, 
-            { genre: favoriteGenre }
+            { email: userEmail, genre: favoriteGenre }
         );
 
         const recommendedSongs = recommendedSongsResult.records.map(record => ({
@@ -156,6 +157,7 @@ export const getRecommendedSongsBasedOnFavoriteGenre = async (userEmail) => {
         await session.close();
     }
 };
+
 
 // FETCH RECOMMENDED SONGS BASED ON SECOND FAVORITE GENRE
 export const getRecommendedSongsBasedOnSecondFavoriteGenre = async (userEmail) => {
