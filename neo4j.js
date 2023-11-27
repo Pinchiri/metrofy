@@ -168,7 +168,7 @@ export const getRecommendedSongsBasedOnSecondFavoriteGenre = async (userEmail) =
             `MATCH (u:User {email: $email})-[:FAVORITED]->(s:Cancion)-[:BELONGS_TO]->(g:Genre)
              RETURN g.name AS genre, COUNT(*) AS count
              ORDER BY count DESC
-             SKIP 1 LIMIT 1;`, // Aquí se cambió a SKIP 1 LIMIT 1
+             SKIP 1 LIMIT 1;`, // SKIP 1 LIMIT 1 para el segundo género más favorito
             { email: userEmail }
         );
         const secondFavoriteGenre = secondFavoriteGenreResult.records[0]?.get('genre');
@@ -176,12 +176,13 @@ export const getRecommendedSongsBasedOnSecondFavoriteGenre = async (userEmail) =
             return { genre: null, songs: [] };
         }
 
-        // Obtener canciones recomendadas de ese género
+        // Obtener canciones recomendadas de ese género que el usuario no ha marcado como favoritas
         const recommendedSongsResult = await session.run(
             `MATCH (s:Cancion)-[:BELONGS_TO]->(g:Genre {name: $genre})
+             WHERE NOT (:User {email: $email})-[:FAVORITED]->(s)
              RETURN s.id AS id, s.title AS title, s.artist AS artist, s.duration AS duration
              LIMIT 10;`, 
-            { genre: secondFavoriteGenre }
+            { email: userEmail, genre: secondFavoriteGenre }
         );
 
         const recommendedSongs = recommendedSongsResult.records.map(record => ({
@@ -200,6 +201,7 @@ export const getRecommendedSongsBasedOnSecondFavoriteGenre = async (userEmail) =
     }
 };
 
+
 // FETCH RECOMMENDED SONGS BASED ON FAVORITE ARTIST
 export const getRecommendedSongsBasedOnFavoriteArtist = async (userEmail) => {
     const session = driver.session();
@@ -217,12 +219,13 @@ export const getRecommendedSongsBasedOnFavoriteArtist = async (userEmail) => {
             return { artist: null, songs: [] };
         }
 
-        // Obtener canciones recomendadas de ese artista
+        // Obtener canciones recomendadas de ese artista que el usuario no ha marcado como favoritas
         const recommendedSongsResult = await session.run(
             `MATCH (s:Cancion)-[:PERFORMED_BY]->(a:Artist {name_artist: $artist})
+             WHERE NOT (:User {email: $email})-[:FAVORITED]->(s)
              RETURN s.id AS id, s.title AS title, s.artist AS artist, s.duration AS duration
              LIMIT 10;`,
-            { artist: favoriteArtist }
+            { email: userEmail, artist: favoriteArtist }
         );
 
         const recommendedSongs = recommendedSongsResult.records.map(record => ({
@@ -240,6 +243,7 @@ export const getRecommendedSongsBasedOnFavoriteArtist = async (userEmail) => {
         await session.close();
     }
 };
+
 
 // FETCH RECOMMENDED SONGS BASED ON COUNTRY
 export async function getRecommendedSongsBasedOnCountry(userEmail) {
