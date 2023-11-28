@@ -4,7 +4,6 @@ import { PlayIcon } from "@heroicons/react/24/solid";
 import Rating from "../Rating/Rating";
 
 const SongCardView = ({
-  songId,
   title,
   gender,
   artist,
@@ -15,10 +14,7 @@ const SongCardView = ({
   handlePlay,
 }) => {
   return (
-    <div
-      className="card card-compact md:card-normal w-50 md:w-[500px] bg-primary text-primary-content z-0 shadow-md"
-      key={songId}
-    >
+    <div className="card card-compact md:card-normal w-50 md:w-[500px] bg-primary text-primary-content z-0 shadow-md">
       <div className="card-body flex flex-row">
         <div className="flex flex-col font-semibold w-[200px] md:w-2/3 md:max-w-none mr-10 md:mr-20">
           <h2 className="card-title block font-bold truncate">{title}</h2>

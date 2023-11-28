@@ -6,19 +6,16 @@ import {
   deleteFavoritedRelationship,
   listenToSong,
 } from "../../../neo4j";
-import { useToaster } from "../Toaster/hooks/useToaster";
-import Toaster from "../Toaster/Toaster";
 
 const SongCard = ({
   song,
   enhancedSongs,
   setEnhancedSongs,
   currentUser,
-  id,
+  setToasterProperties,
+  showToast,
 }) => {
   const [isFavorite, setIsFavorite] = useState(song.favorited);
-  const { isVisible, showToast, toasterProperties, setToasterProperties } =
-    useToaster();
 
   const handleFavorite = async () => {
     try {
@@ -86,26 +83,16 @@ const SongCard = ({
   };
 
   return (
-    <>
-      {isVisible && (
-        <Toaster
-          message={toasterProperties.toasterMessage}
-          isVisible={isVisible}
-          typeColor={toasterProperties.typeColor}
-        />
-      )}
-      <SongCardView
-        songId={id}
-        title={song.title}
-        gender={song.gender}
-        artist={song.artist}
-        duration={song.duration}
-        rating={song.rating}
-        isFavorite={isFavorite}
-        handleFavorite={handleFavorite}
-        handlePlay={handlePlay}
-      />
-    </>
+    <SongCardView
+      title={song.title}
+      gender={song.gender}
+      artist={song.artist}
+      duration={song.duration}
+      rating={song.rating}
+      isFavorite={isFavorite}
+      handleFavorite={handleFavorite}
+      handlePlay={handlePlay}
+    />
   );
 };
 

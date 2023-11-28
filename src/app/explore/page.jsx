@@ -53,16 +53,19 @@ export default function Explore() {
         setFavoriteGenre(firstGenre);
         setRecommendedSongs(firstGenreSongs);
 
-        console.log(firstGenreSongs);
-
         // SEGUNDO GENERO MAS ESCUCHADO
         const { genre: secondGenre, songs: secondGenreSongs } =
           await getRecommendedSongsBasedOnSecondFavoriteGenre(
             currentUser.email
           );
+
+        console.log(secondGenre);
+        console.log(secondGenreSongs);
+
         if (secondGenre) {
           setSecondFavoriteGenre(secondGenre);
           setSecondRecommendedSongs(secondGenreSongs);
+          console.log(secondGenreSongs);
         }
 
         // ARTISTA FAVORITO

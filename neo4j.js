@@ -216,8 +216,10 @@ export const getRecommendedSongsBasedOnSecondFavoriteGenre = async (
              SKIP 1 LIMIT 1;`, // SKIP 1 LIMIT 1 para el segundo género más favorito
       { email: userEmail }
     );
+
     const secondFavoriteGenre =
       secondFavoriteGenreResult.records[0]?.get("genre");
+
     if (!secondFavoriteGenre) {
       return { genre: null, songs: [] };
     }
@@ -226,7 +228,7 @@ export const getRecommendedSongsBasedOnSecondFavoriteGenre = async (
     const recommendedSongsResult = await session.run(
       `MATCH (s:Cancion)-[:BELONGS_TO]->(g:Genre {name: $genre})
              WHERE NOT (:User {email: $email})-[:FAVORITED]->(s)
-             RETURN s.id AS id, s.title AS title, s.artist AS artist, s.duration AS duration
+             RETURN s.id AS id, s.title AS title, s.artist AS artist, s.duration AS duration, s.rating AS rating
              LIMIT 10;`,
       { email: userEmail, genre: secondFavoriteGenre }
     );
@@ -323,7 +325,7 @@ export async function getRecommendedSongsBasedOnCountry(userEmail) {
     // Obtener canciones recomendadas de ese género en el país del usuario
     const recommendedSongsResult = await session.run(
       `MATCH (s:Cancion)-[:BELONGS_TO]->(g:Genre {name: "$genre"})
-             RETURN s.id AS id, s.title AS title, s.artist AS artist, s.duration AS duration
+             RETURN s.id AS id, s.title AS title, s.artist AS artist, s.duration AS duration, s.rating AS rating
              LIMIT 10;`,
       { genre: randomGenre }
     );
@@ -334,6 +336,7 @@ export async function getRecommendedSongsBasedOnCountry(userEmail) {
       title: record.get("title"),
       artist: record.get("artist"),
       duration: record.get("duration"),
+      rating: record.get("rating"),
     }));
 
     // Devolver resultados
