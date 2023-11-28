@@ -66,8 +66,23 @@ const SongCard = ({
   };
 
   const handlePlay = async () => {
-    console.log("Reproducing song:", song.title);
-    await listenToSong(currentUser?.email, song.id);
+    try {
+      const request = await listenToSong(currentUser?.email, song.id);
+
+      console.log("Reproducing song:", song.title);
+
+      setToasterProperties({
+        toasterMessage: "Se ha reproducido: " + song.title,
+        typeColor: "success",
+      });
+      showToast();
+    } catch (error) {
+      setToasterProperties({
+        toasterMessage: "No se ha podido reproducir la canción :(",
+        typeColor: "error",
+      });
+      showToast();
+    }
   };
 
   return (
