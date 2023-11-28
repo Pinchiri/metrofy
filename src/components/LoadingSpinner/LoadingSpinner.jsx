@@ -10,7 +10,7 @@ const LoadingSpinner = ({ color = "primary", extraStyles }) => {
 
   return (
     <span
-      className={`loading loading-spinner loading-xs sm:loading-sm md:loading-md ${colors[color]} ${extraStyles}`}
+      className={`loading loading-spinner loading-xs sm:loading-sm md:loading-md lg:loading-lg ${colors[color]} ${extraStyles}`}
     ></span>
   );
 };

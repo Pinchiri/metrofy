@@ -16,7 +16,7 @@ const SongCardView = ({
 }) => {
   return (
     <div
-      className="card card-compact md:card-normal w-50 md:w-[500px] bg-primary text-primary-content z-0"
+      className="card card-compact md:card-normal w-50 md:w-[500px] bg-primary text-primary-content z-0 shadow-md"
       key={songId}
     >
       <div className="card-body flex flex-row">
