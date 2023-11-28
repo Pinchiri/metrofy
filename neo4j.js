@@ -350,28 +350,25 @@ export async function getRecommendedSongsBasedOnCountry(userEmail) {
 
 // FETCH RECOMMENDED SONGS BASED ON ARTIST OF TOP SONGS NOT FOLLOWED
 export const getArtistsOfTopSongsNotFollowed = async (userEmail) => {
+  console.log("Email del usuario:", userEmail);
   const session = driver.session();
+
   try {
-    // Primera parte: Encontrar las canciones más escuchadas
-    const topSongsResult = await session.run(
-      `MATCH (u:User {username: $email})-[l:LISTENED]->(s:Song)
-             WITH s, u, l.number_reproductions AS plays
-             ORDER BY plays DESC
-             LIMIT 10`,
-      { email: userEmail }
-    );
+    const query = `
+      MATCH (u:User {email: $email})-[l:LISTENED]->(c:Cancion)
+      WITH u, c, l.number_reproductions AS plays
+      ORDER BY plays DESC
+      LIMIT 10
+      WITH u, collect(c) AS topSongs
+      UNWIND topSongs AS ts
+      MATCH (ts)-[:PERFORMED_BY]->(a:Artist)
+      WHERE NOT (u)-[:FOLLOWS]->(a)
+      RETURN DISTINCT a
+    `;
 
-    const topSongs = topSongsResult.records.map((record) => record.get("s"));
-
-    // Segunda parte: Encontrar artistas de esas canciones que el usuario no sigue
-    const artistResult = await session.run(
-      `MATCH (s:Song)-[:PERFORMED_BY]->(a:Artist)
-             WHERE s IN $topSongs AND NOT (:User {username: $email})-[:FOLLOWS]->(a)
-             RETURN DISTINCT a`,
-      { topSongs: topSongs, email: userEmail }
-    );
-
-    return artistResult.records.map((record) => record.get("a").properties);
+    const result = await session.run(query, { email: userEmail });
+    console.log(result)
+    return result.records.map(record => record.get("a").properties);
   } catch (error) {
     console.error("Error al obtener artistas:", error);
   } finally {
