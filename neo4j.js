@@ -180,7 +180,7 @@ export const getRecommendedSongsBasedOnFavoriteGenre = async (userEmail) => {
     const recommendedSongsResult = await session.run(
       `MATCH (s:Cancion)-[:BELONGS_TO]->(g:Genre {name: $genre})
              WHERE NOT (:User {email: $email})-[:FAVORITED]->(s)
-             RETURN s.id AS id, s.title AS title, s.artist AS artist, s.duration AS duration
+             RETURN s.id AS id, s.title AS title, s.artist AS artist, s.duration AS duration, s.rating AS rating
              LIMIT 10;`,
       { email: userEmail, genre: favoriteGenre }
     );
@@ -189,6 +189,8 @@ export const getRecommendedSongsBasedOnFavoriteGenre = async (userEmail) => {
       id: record.get("id"),
       title: record.get("title"),
       artist: record.get("artist"),
+      duration: record.get("duration"),
+      rating: record.get("rating"),
     }));
 
     return { genre: favoriteGenre, songs: recommendedSongs };
@@ -367,8 +369,8 @@ export const getArtistsOfTopSongsNotFollowed = async (userEmail) => {
     `;
 
     const result = await session.run(query, { email: userEmail });
-    console.log(result)
-    return result.records.map(record => record.get("a").properties);
+    console.log(result);
+    return result.records.map((record) => record.get("a").properties);
   } catch (error) {
     console.error("Error al obtener artistas:", error);
   } finally {

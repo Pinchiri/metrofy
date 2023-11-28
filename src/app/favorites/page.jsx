@@ -46,9 +46,10 @@ const Favorites = () => {
 
   useEffect(() => {
     fetchFavoriteSongs();
+    console.log("favoriteSongs", favoriteSongs);
   }, [currentUser]);
 
-  useEffect(() => {}, [favoriteSongs]);
+  useEffect(() => { }, [favoriteSongs]);
 
   return (
     <FavoritesView

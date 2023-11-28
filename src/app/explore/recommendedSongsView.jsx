@@ -1,5 +1,7 @@
 import Divider from "@/components/Divider/Divider";
 import SongsList from "@/components/SongsList/SongsList";
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
+import { useEffect } from "react";
 
 const RecommendedSongsView = ({
   category,
@@ -8,8 +10,9 @@ const RecommendedSongsView = ({
   country,
   countryGenre,
   listSongs,
-  setEnhancedSongs,
-  currentUser
+  setRecommendedSongs,
+  currentUser,
+  isLoading
 }) => {
   if (!categoryName || songs.length === 0) {
     return <div>No hay recomendaciones disponibles.</div>;
@@ -35,19 +38,28 @@ const RecommendedSongsView = ({
 
   return (
     <div className="w-full flex flex-col justify-center mt-40">
-      <h1 className="text-5xl font-bold my-4 px-6 text-center leading-snug">
-        {message}
-      </h1>
+      {isLoading && (
+        <div className="w-full max-w-screen flex items-center justify-center">
+          <LoadingSpinner />
+        </div>
+      )}
+      {!isLoading && (
+        <>
+          <h1 className="text-5xl font-bold my-4 px-6 text-center">
+            {message}
+          </h1>
 
-      <Divider color="none" />
+          <Divider color="none" />
 
-      <div className="w-full flex flex-col items-center justify-center">
-        <SongsList
-          songsList={songsToDisplay}
-          setEnhancedSongs={setEnhancedSongs}
-          currentUser={currentUser}
-        />
-      </div>
+          <div className="w-full flex flex-col items-center justify-center">
+            <SongsList
+              songsList={songsToDisplay}
+              setEnhancedSongs={setRecommendedSongs}
+              currentUser={currentUser}
+            />
+          </div>
+        </>
+      )}
 
 
     </div>

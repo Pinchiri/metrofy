@@ -24,7 +24,9 @@ export default function Explore() {
   const [country, setCountry] = useState([]);
   const [countryGenre, setCountryGenre] = useState([]);
   const [listSongs, setListSongs] = useState([]);
-  const [enhancedSongs, setEnhancedSongs] = useState([]);
+
+
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -44,6 +46,7 @@ export default function Explore() {
         return; // Previene la ejecución si currentUser es null o no tiene email
       }
       try {
+        setIsLoading(true);
         // PRIMER GENERO MAS ESCUCHADO
         const { genre: firstGenre, songs: firstGenreSongs } =
           await getRecommendedSongsBasedOnFavoriteGenre(currentUser.email);
@@ -78,8 +81,11 @@ export default function Explore() {
           setCountryGenre(countryGenre);
           setListSongs(listSongs);
         }
+
+        setIsLoading(false);
       } catch (error) {
         console.error("Error al obtener canciones recomendadas:", error);
+        setIsLoading(false);
       }
     };
     fetchRecommendedSongs();
@@ -92,10 +98,11 @@ export default function Explore() {
 
         <RecommendedSongsView
           category="genre"
-          setEnhancedSongs={setEnhancedSongs}
+          setRecommendedSongs={setRecommendedSongs}
           currentUser={currentUser}
           categoryName={favoriteGenre}
           songs={recommendedSongs}
+          isLoading={isLoading}
         />
 
         <Divider color="none" />
