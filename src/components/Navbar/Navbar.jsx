@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import NavbarView from "./NavbarView";
-import { exploreURL, genresURL, homeURL, loginURL } from "@/constants/urls";
+import { exploreURL, genresURL, artistsURL, homeURL, loginURL } from "@/constants/urls";
 import { useUserData } from "@/context/userContext";
 import { auth } from "../../../firebase";
 import { useRouter } from "next/navigation";
@@ -32,6 +32,10 @@ const Navbar = () => {
     {
       label: "Géneros",
       link: genresURL,
+    },
+    {
+      label: "Artistas",
+      link: artistsURL
     },
   ];
   return (
