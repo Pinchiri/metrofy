@@ -1,5 +1,5 @@
 import ArtistCard from "@/components/ArtistCard/ArtistCard";
-
+//Ignorar las artistcard por ahora, son de prueba
 export default function ArtistsView ({}) {
 
     return(
@@ -12,6 +12,7 @@ export default function ArtistsView ({}) {
                 <ArtistCard/>
                 <ArtistCard/>
                 <ArtistCard/>
+                
             </div>
         </div>
     )
