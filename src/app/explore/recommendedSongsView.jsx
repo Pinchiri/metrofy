@@ -8,6 +8,8 @@ const RecommendedSongsView = ({
   country,
   countryGenre,
   listSongs,
+  setEnhancedSongs,
+  currentUser
 }) => {
   if (!categoryName || songs.length === 0) {
     return <div>No hay recomendaciones disponibles.</div>;
@@ -40,8 +42,14 @@ const RecommendedSongsView = ({
       <Divider color="none" />
 
       <div className="w-full flex flex-col items-center justify-center">
-        <SongsList songsList={songsToDisplay} />
+        <SongsList
+          songsList={songsToDisplay}
+          setEnhancedSongs={setEnhancedSongs}
+          currentUser={currentUser}
+        />
       </div>
+
+
     </div>
   );
 };

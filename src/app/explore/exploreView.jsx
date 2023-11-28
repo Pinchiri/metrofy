@@ -13,7 +13,7 @@ export default function ExploreView({ categories }) {
         <Divider color="none" />
 
         <div className="text-primary-content w-11/12 py-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
-          {categories.length ? (
+          {categories.length || categories ? (
             categories.map((category, index) => (
               <Link
                 href={{

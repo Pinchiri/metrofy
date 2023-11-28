@@ -24,6 +24,7 @@ export default function Explore() {
   const [country, setCountry] = useState([]);
   const [countryGenre, setCountryGenre] = useState([]);
   const [listSongs, setListSongs] = useState([]);
+  const [enhancedSongs, setEnhancedSongs] = useState([]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -91,6 +92,7 @@ export default function Explore() {
 
         <RecommendedSongsView
           category="genre"
+          setEnhancedSongs={setEnhancedSongs}
           currentUser={currentUser}
           categoryName={favoriteGenre}
           songs={recommendedSongs}
@@ -98,7 +100,7 @@ export default function Explore() {
 
         <Divider color="none" />
 
-        <RecommendedSongsView
+        {/* <RecommendedSongsView
           category="genre"
           currentUser={currentUser}
           categoryName={secondFavoriteGenre}
@@ -122,7 +124,7 @@ export default function Explore() {
           currentUser={currentUser}
           countryGenre={countryGenre}
           listSongs={listSongs}
-        />
+        /> */}
       </div>
     </>
   );
