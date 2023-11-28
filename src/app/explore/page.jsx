@@ -83,31 +83,33 @@ export default function Explore() {
 
   return (
     <>
-      <ExploreView categories={categories} />
-      <RecommendedSongsView
-        category="genre"
-        categoryName={favoriteGenre}
-        songs={recommendedSongs}
-      />
-      <br />
-      <RecommendedSongsView
-        category="genre"
-        categoryName={secondFavoriteGenre}
-        songs={secondRecommendedSongs}
-      />
-      <br />
-      <RecommendedSongsView
-        category="artist"
-        categoryName={favoriteArtist}
-        songs={artistRecommendedSongs}
-      />
-      <br />
-      <RecommendedSongsView
-        category="countryGenre"
-        country={country}
-        countryGenre={countryGenre}
-        listSongs={listSongs}
-      />
+      <div className="my-10">
+        <ExploreView categories={categories} />
+        <RecommendedSongsView
+          category="genre"
+          categoryName={favoriteGenre}
+          songs={recommendedSongs}
+        />
+        <br />
+        <RecommendedSongsView
+          category="genre"
+          categoryName={secondFavoriteGenre}
+          songs={secondRecommendedSongs}
+        />
+        <br />
+        <RecommendedSongsView
+          category="artist"
+          categoryName={favoriteArtist}
+          songs={artistRecommendedSongs}
+        />
+        <br />
+        <RecommendedSongsView
+          category="countryGenre"
+          country={country}
+          countryGenre={countryGenre}
+          listSongs={listSongs}
+        />
+      </div>
     </>
   );
 }

@@ -1,48 +1,51 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import {useSearchParams } from "next/navigation";
-import { getSongsByGenderNeo4J } from '../../../neo4j';
-import CategorySongsView from './categorySongsView';
+import React, { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { getSongsByGenderNeo4J } from "../../../neo4j";
+import CategorySongsView from "./categorySongsView";
 import { useUserData } from "@/context/userContext";
-import { createFavoritedRelationship, deleteFavoritedRelationship, listenToSong, getSongsWithFavoritedStatus } from "../../../neo4j";
+import { genresURL } from "@/constants/urls";
 
 const CategorySongs = () => {
-    const searchParams = useSearchParams();
-    const category = searchParams.get("category")
-    const { currentUser } = useUserData();
-    const [songs, setSongs] = useState([]);
-    const [enhancedSongs, setEnhancedSongs] = useState(songs);
+  const searchParams = useSearchParams();
+  const category = searchParams.get("category");
 
-    useEffect(() => {
-        setEnhancedSongs(songs);
-    }, [songs]);
+  const { currentUser } = useUserData();
+  const router = useRouter();
 
-    useEffect(() => {
-        async function fetchData() {
-            if (currentUser?.email && category) {
-                const songsWithStatus = await getSongsByGenderNeo4J(category, currentUser.email);
-                setSongs(songsWithStatus);
-            }
-        }
-        fetchData();
-    }, [category, currentUser?.email]);
+  const [songs, setSongs] = useState([]);
+  const [enhancedSongs, setEnhancedSongs] = useState(songs);
 
-    const handleLike = async (song) => {
-        await createFavoritedRelationship(currentUser?.email, song.id);
-        setEnhancedSongs(enhancedSongs.map(s => s.id === song.id ? { ...s, favorited: true } : s));
-    };
-    
-    const handleUnlike = async (song) => {
-        await deleteFavoritedRelationship(currentUser?.email, song.id);
-        setEnhancedSongs(enhancedSongs.map(s => s.id === song.id ? { ...s, favorited: false } : s));
-    };
+  const goBack = () => {
+    router.push(genresURL);
+  };
 
-    const handleReproduce = async (song) => {
-        console.log("Reproducing song:", song.title);
-        await listenToSong(currentUser?.email, song.id);
-    };
+  useEffect(() => {
+    setEnhancedSongs(songs);
+  }, [songs]);
 
-    return <CategorySongsView songs={enhancedSongs} currentUser={currentUser} handleLike={handleLike} handleUnlike={handleUnlike} handleReproduce={handleReproduce} />;
+  useEffect(() => {
+    async function fetchData() {
+      if (currentUser?.email && category) {
+        const songsWithStatus = await getSongsByGenderNeo4J(
+          category,
+          currentUser.email
+        );
+        setSongs(songsWithStatus);
+      }
+    }
+    fetchData();
+  }, [category, currentUser?.email]);
+
+  return (
+    <CategorySongsView
+      enhancedSongs={enhancedSongs}
+      currentUser={currentUser}
+      categoryName={category}
+      setEnhancedSongs={setEnhancedSongs}
+      goBack={goBack}
+    />
+  );
 };
 
 export default CategorySongs;

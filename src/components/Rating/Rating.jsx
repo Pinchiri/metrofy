@@ -16,9 +16,10 @@ const Rating = ({ rating }) => {
           type="radio"
           name="rating-9"
           className={`mask mask-star-2 ${
-            isStarActive ? "bg-warning" : "bg-black"
+            isStarActive ? "bg-warning" : "bg-black opacity-50"
           }`}
           checked={starNumber === roundedRating}
+          readOnly
         />
       );
     });
