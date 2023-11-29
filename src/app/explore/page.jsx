@@ -27,14 +27,18 @@ export default function Explore() {
 
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingCat, setIsLoadingCat] = useState(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
+      setIsLoadingCat(true);
       try {
         const data = await getCategoriesNeo4J();
         setCategories(data);
+        setIsLoadingCat(false);
       } catch (error) {
         console.error("Error al obtener categorías:", error);
+        setIsLoadingCat(false);
       }
     };
     fetchCategories();
@@ -48,7 +52,8 @@ export default function Explore() {
       try {
         setIsLoading(true);
         // PRIMER GENERO MAS ESCUCHADO
-        const { genre: firstGenre, songs: firstGenreSongs } =
+        const { genre: firstGenre,
+          songs: firstGenreSongs } =
           await getRecommendedSongsBasedOnFavoriteGenre(currentUser.email);
         setFavoriteGenre(firstGenre);
         setRecommendedSongs(firstGenreSongs);
@@ -103,24 +108,32 @@ export default function Explore() {
           categoryName={favoriteGenre}
           songs={recommendedSongs}
           isLoading={isLoading}
-        />
-
-        <Divider color="none" />
-
-        {/* <RecommendedSongsView
-          category="genre"
-          currentUser={currentUser}
-          categoryName={secondFavoriteGenre}
-          songs={secondRecommendedSongs}
+          recommendationType={"FavoriteGenre"}
         />
 
         <Divider color="none" />
 
         <RecommendedSongsView
+          category="genre"
+          setRecommendedSongs={setSecondRecommendedSongs}
+          currentUser={currentUser}
+          categoryName={secondFavoriteGenre}
+          songs={secondRecommendedSongs}
+          isLoading={isLoading}
+          recommendationType={"SecondFavoriteGenre"}
+        />
+
+
+        <Divider color="none" />
+
+        <RecommendedSongsView
           category="artist"
+          setRecommendedSongs={setArtistRecommendedSongs}
           currentUser={currentUser}
           categoryName={favoriteArtist}
           songs={artistRecommendedSongs}
+          isLoading={isLoading}
+          recommendationType={"FavoriteArtist"}
         />
 
         <Divider color="none" />
@@ -128,10 +141,13 @@ export default function Explore() {
         <RecommendedSongsView
           category="countryGenre"
           country={country}
+          setRecommendedSongs={setListSongs}
           currentUser={currentUser}
           countryGenre={countryGenre}
           listSongs={listSongs}
-        /> */}
+          isLoading={isLoading}
+          recommendationType={"Country"}
+        />
       </div>
     </>
   );

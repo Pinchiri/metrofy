@@ -1,6 +1,5 @@
 import Divider from "@/components/Divider/Divider";
 import { ArrowLeftIcon } from "@heroicons/react/24/solid";
-import SongCard from "@/components/SongCard/SongCard";
 import SongsList from "@/components/SongsList/SongsList";
 
 const CategorySongsView = ({

@@ -2,6 +2,8 @@ import Divider from "@/components/Divider/Divider";
 import SongsList from "@/components/SongsList/SongsList";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import { useEffect } from "react";
+import Link from "next/link";
+import { recommendedURL } from "@/constants/urls";
 
 const RecommendedSongsView = ({
   category,
@@ -12,7 +14,8 @@ const RecommendedSongsView = ({
   listSongs,
   setRecommendedSongs,
   currentUser,
-  isLoading
+  isLoading,
+  recommendationType
 }) => {
   if (!categoryName || songs.length === 0) {
     return <div>No hay recomendaciones disponibles.</div>;
@@ -36,6 +39,11 @@ const RecommendedSongsView = ({
     songsToDisplay = listSongs;
   }
 
+  if (songsToDisplay && songsToDisplay.length > 2) {
+    songsToDisplay = songsToDisplay.slice(0, 2);
+  }
+
+
   return (
     <div className="w-full flex flex-col justify-center mt-40">
       {isLoading && (
@@ -43,26 +51,45 @@ const RecommendedSongsView = ({
           <LoadingSpinner />
         </div>
       )}
-      {!isLoading && (
-        <>
-          <h1 className="text-5xl font-bold my-4 px-6 text-center">
-            {message}
-          </h1>
 
-          <Divider color="none" />
+      {!isLoading &&
+        (
+          <div className="w-full flex flex-col items-center justify-center ">
+            <h1 className="text-5xl font-bold my-4 px-6 text-center">
+              {message}
+            </h1>
 
-          <div className="w-full flex flex-col items-center justify-center">
-            <SongsList
-              songsList={songsToDisplay}
-              setEnhancedSongs={setRecommendedSongs}
-              currentUser={currentUser}
-            />
+            <Divider color="none" />
+
+            <div className="w-full flex flex-row items-end justify-end pr-12">
+              <Link
+                href={{
+                  pathname: recommendedURL,
+                  query: {
+                    category: category,
+                  },
+                }}
+                key={recommendationType}
+              >
+                <h3 className="text-2xl font-bold my-4 px-6 text-right">
+                  Ver más
+                </h3>
+              </Link>
+            </div>
+
+            <div className="w-full flex flex-col items-center justify-center">
+              <SongsList
+                songsList={songsToDisplay}
+                setEnhancedSongs={setRecommendedSongs}
+                currentUser={currentUser}
+              />
+            </div>
           </div>
-        </>
-      )}
+        )
+      }
 
 
-    </div>
+    </div >
   );
 };
 
