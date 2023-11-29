@@ -37,8 +37,6 @@ export const signInWithGooglePopup = () => signInWithPopup(auth, provider);
 export const db = getFirestore(firebaseApp);
 export const storage = getStorage(firebaseApp);
 
-
-
 export const createUserDocumentFromAuth = async (
   userAuth,
   additionalInformation = {}
@@ -62,7 +60,7 @@ export const createUserDocumentFromAuth = async (
         typeUser,
         ...additionalInformation,
       });
-      await createNeo4jUser(displayName, email);
+      await createNeo4jUser(displayName, email, "Venezuela");
     } catch (error) {
       console.log("Error creando el usuario", error.message);
     }

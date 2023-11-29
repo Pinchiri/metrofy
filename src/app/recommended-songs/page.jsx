@@ -54,7 +54,7 @@ const RecommendedSongs = () => {
                     setMessage(`¿Te gusta ${favoriteArtist}? Aquí hay más`);
                 }
                 else if (recomendationType === "CountryGenre" && category === "countryGenre") {
-                    const { country: country, countryGenre: countryGenre, songs: listSongs } = await getRecommendedSongsBasedOnCountry(currentUser.email);
+                    const { country: country, countryGenre: countryGenre, listSongs: listSongs } = await getRecommendedSongsBasedOnCountry(currentUser.email);
                     setRecommendedSongs(listSongs);
                     setMessage(`Explora lo Mejor de ${countryGenre} Popular en ${country}`);
                 }

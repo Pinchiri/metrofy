@@ -7,6 +7,7 @@ const SongsList = ({ songsList, currentUser, setEnhancedSongs }) => {
   const { isVisible, showToast, toasterProperties, setToasterProperties } =
     useToaster();
 
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 justify-center items-center gap-4 lg:gap-10 my-10">
       {isVisible && (

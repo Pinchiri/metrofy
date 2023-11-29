@@ -16,9 +16,7 @@ const RecommendedSongsView = ({
   isLoading,
   recommendationType
 }) => {
-  if (!categoryName || songs.length === 0) {
-    return <div>No hay recomendaciones disponibles.</div>;
-  }
+
 
   // Determinar el mensaje a mostrar según la categoría (género o artista)
   let message = "";

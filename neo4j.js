@@ -13,12 +13,31 @@ export default driver;
 const session = driver.session();
 
 //CREATE NEW USER
-export const createNeo4jUser = async (name, email) => {
+export const createNeo4jUser = async (driver, name, email, country) => {
+  const session = driver.session();
   try {
-    await session.run("CREATE (n:User {name: $name, email: $email})", {
-      name,
-      email,
-    });
+    // Crear el nodo User
+    const userResult = await session.run(
+      "CREATE (u:User {name: $name, email: $email, country: $country}) RETURN u",
+      { name, email, country }
+    );
+
+    // Obtener la identificación del nodo User creado
+    const userId = userResult.records[0].get("u").identity;
+
+    // Crear la relación LIVES_IN si el nodo Country existe
+    await session.run(
+      `MATCH (u:User), (c:Country {country: $country})
+       WHERE id(u) = $userId
+       MERGE (u)-[:LIVES_IN]->(c)`,
+      { country, userId }
+    );
+  } catch (error) {
+    console.error(
+      "Error creating Neo4j user or setting LIVES_IN relationship:",
+      error
+    );
+    throw error;
   } finally {
     await session.close();
   }
@@ -302,7 +321,7 @@ export async function getRecommendedSongsBasedOnCountry(userEmail) {
              RETURN c.country AS country`,
       { email: userEmail }
     );
-    const userCountry = userCountryResult.records[0]?.get("country");
+    const userCountry = await userCountryResult.records[0]?.get("country");
 
     // Verificar si se encontró el país
     if (!userCountry) {
@@ -315,7 +334,12 @@ export async function getRecommendedSongsBasedOnCountry(userEmail) {
             RETURN g.name AS genre`,
       { country: userCountry }
     );
-    const randomGenre = randomGenreResult.records[0]?.get("genre");
+
+    // Obtener un género al azar
+    const randomGenre =
+      randomGenreResult.records[
+        Math.floor(Math.random() * randomGenreResult.records.length)
+      ]?.get("genre");
 
     // Verificar si se encontró el género
     if (!randomGenre) {
@@ -324,10 +348,10 @@ export async function getRecommendedSongsBasedOnCountry(userEmail) {
 
     // Obtener canciones recomendadas de ese género en el país del usuario
     const recommendedSongsResult = await session.run(
-      `MATCH (s:Cancion)-[:BELONGS_TO]->(g:Genre {name: "$genre"})
-             RETURN s.id AS id, s.title AS title, s.artist AS artist, s.duration AS duration, s.rating AS rating
-             LIMIT 10;`,
-      { genre: randomGenre }
+      `MATCH (s:Cancion)-[:BELONGS_TO]->(g:Genre {name: $genreName})
+      RETURN s.id AS id, s.title AS title, s.artist AS artist, s.duration AS duration, s.rating AS rating
+      LIMIT 10;`,
+      { genreName: randomGenre }
     );
 
     // Construir la lista de canciones recomendadas
@@ -342,12 +366,12 @@ export async function getRecommendedSongsBasedOnCountry(userEmail) {
     // Devolver resultados
     return {
       country: userCountry,
-      genre: randomGenre,
-      songs: recommendedSongs,
+      countryGenre: randomGenre,
+      listSongs: recommendedSongs,
     };
   } catch (error) {
     console.error("Error al obtener canciones recomendadas:", error);
-    return { country: null, genre: null, songs: [], error: error.message };
+    return { country: null, genreName: null, songs: [], error: error.message };
   } finally {
     await session.close();
   }

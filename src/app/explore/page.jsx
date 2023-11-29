@@ -80,11 +80,13 @@ export default function Explore() {
         const { country, countryGenre, listSongs } =
           await getRecommendedSongsBasedOnCountry(currentUser.email);
         if (country) {
-          console.log(country, countryGenre, listSongs);
           setCountry(country);
           setCountryGenre(countryGenre);
           setListSongs(listSongs);
         }
+
+        console.log("recomendation", listSongs);
+        console.log("recomendation 2", secondGenreSongs);
 
         setIsLoading(false);
       } catch (error) {
@@ -140,13 +142,13 @@ export default function Explore() {
         />
 
         <Divider color="none" />
-
         <RecommendedSongsView
           category="countryGenre"
-          setRecommendedSongs={setListSongs}
           currentUser={currentUser}
-          categoryName={countryGenre}
-          songs={listSongs}
+          countryGenre={countryGenre}
+          country={country}
+          setRecommendedSongs={setListSongs}
+          listSongs={listSongs}
           isLoading={isLoading}
           recommendationType={"CountryGenre"}
         />
