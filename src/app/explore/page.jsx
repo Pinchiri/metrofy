@@ -64,9 +64,6 @@ export default function Explore() {
             currentUser.email
           );
 
-        console.log(secondGenre);
-        console.log(secondGenreSongs);
-
         if (secondGenre) {
           setSecondFavoriteGenre(secondGenre);
           setSecondRecommendedSongs(secondGenreSongs);
@@ -141,16 +138,6 @@ export default function Explore() {
 
         <Divider color="none" />
 
-        <RecommendedSongsView
-          category="countryGenre"
-          country={country}
-          setRecommendedSongs={setListSongs}
-          currentUser={currentUser}
-          countryGenre={countryGenre}
-          listSongs={listSongs}
-          isLoading={isLoading}
-          recommendationType={"Country"}
-        />
       </div>
     </>
   );
