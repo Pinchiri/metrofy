@@ -11,17 +11,17 @@ const ArtistCard = ({
     artist,
     currentUser,
     id,
-    testFollowed,
 }) => {
 
-    const [isFollowed, setIsFollowed] = useState(testFollowed);
+    const [isFollowed, setIsFollowed] = useState(false);
     const { isVisible, showToast, toasterProperties, setToasterProperties } =
     useToaster();
+    
 
     const handleFollow = async () => {
         try{
             if(!isFollowed){
-//                const response = await createUserFollowsArtist(currentUser?.email, artist.Name);
+                const response = await createUserFollowsArtist(currentUser?.email, artist.name_artist);
                 setToasterProperties({toasterMessage: "Se ha seguido al artista", typeColor: "success"});
                 setIsFollowed(!isFollowed);
                 showToast();
@@ -49,7 +49,7 @@ const ArtistCard = ({
         )}
         <ArtistCardView 
         artist={artist}
-        isFollowed={testFollowed}
+        isFollowed={isFollowed}
         handleFollow={handleFollow}
         />
     </>)
