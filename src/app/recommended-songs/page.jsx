@@ -10,6 +10,7 @@ import {
     getRecommendedSongsBasedOnSecondFavoriteGenre,
     getRecommendedSongsBasedOnFavoriteArtist,
     getRecommendedSongsBasedOnCountry,
+    getSongsByGenre,
 } from "../../../neo4j";
 
 
@@ -19,7 +20,8 @@ const RecommendedSongs = () => {
     const searchParams = useSearchParams();
     const recomendationType = searchParams.get("recommendation");
     const category = searchParams.get("category");
-    const countryGenre = searchParams.get("countryGenre");
+    const countryGenreName = searchParams.get("countryGenre");
+    const countryName = searchParams.get("country");
 
     const { currentUser } = useUserData();
     const [isLoading, setIsLoading] = useState(false);
@@ -55,13 +57,11 @@ const RecommendedSongs = () => {
                     setMessage(`¿Te gusta ${favoriteArtist}? Aquí hay más`);
                 }
                 else if (recomendationType === "CountryGenre" && category === "countryGenre") {
-                    const { country: country, countryGenre: countryGenre, listSongs: listSongs } = await getSongsByGenre(countryGenre, currentUser.email);
-                    setRecommendedSongs(listSongs);
-                    setMessage(`Explora lo Mejor de ${countryGenre} Popular en ${country}`);
+                    const { country: country, countryGenre: genreName, listSongs: songs } = await getSongsByGenre(countryGenreName, countryName, currentUser.email);
+                    setRecommendedSongs(songs);
+                    setMessage(`Explora lo mejor de ${genreName}, Popular en ${country}`);
                 }
-
                 setIsLoading(false);
-                console.log("recomendation", recommendedSongs);
             } catch (error) {
                 console.error("Error al obtener recomendaciones:", error);
                 setIsLoading(false);

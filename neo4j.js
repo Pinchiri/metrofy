@@ -419,16 +419,29 @@ export async function getRecommendedSongsBasedOnCountry(userEmail) {
 }
 
 //FETCH SONGS NOT FAVORITED YET BY GENRE
-export const getSongsByGenre = async (genreName, userEmail) => {
+export const getSongsByGenre = async (genreName, country, userEmail) => {
   const session = driver.session();
   try {
     const result = await session.run(
       `MATCH (c:Cancion)-[:BELONGS_TO]->(g:Genre {name: $genreName})
              WHERE NOT (:User {email: $userEmail})-[:FAVORITED]->(c)
-             RETURN c`,
-      { genreName, userEmail }
+             RETURN c.id AS id, c.title AS title, c.artist AS artist, c.duration AS duration, c.rating AS rating`,
+      { genreName: genreName, userEmail: userEmail }
     );
-    return result.records.map((record) => record.get("c").properties);
+
+    const songs = result.records.map((record) => ({
+      id: record.get("id"),
+      title: record.get("title"),
+      artist: record.get("artist"),
+      duration: record.get("duration"),
+      rating: record.get("rating"),
+    }));
+
+    return {
+      country: country,
+      countryGenre: genreName,
+      listSongs: songs,
+    };
   } catch (error) {
     console.error("Error al obtener canciones por género:", error);
   } finally {
