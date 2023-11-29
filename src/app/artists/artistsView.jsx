@@ -5,7 +5,7 @@ export default function ArtistsView({ artistsList, currentUser }) {
   return (
     <>
       <h1 className="text-5xl font-bold my-4 px-6 text-center">
-        Explora Artistas recomendados para ti
+        Artistas más populares
       </h1>
       <Divider color="none" />
 
