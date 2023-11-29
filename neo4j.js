@@ -13,7 +13,7 @@ export default driver;
 const session = driver.session();
 
 //CREATE NEW USER
-export const createNeo4jUser = async (driver, name, email, country) => {
+export const createNeo4jUser = async (name, email, country) => {
   const session = driver.session();
   try {
     // Crear el nodo User

@@ -16,9 +16,16 @@ const RecommendedSongsView = ({
   isLoading,
   recommendationType,
 }) => {
-  // if (!categoryName || songs.length === 0) {
-  //   return <div></div>;
-  // }
+
+  if (category !== "countryGenre") {
+    if (!categoryName || songs.length === 0) {
+      return <div></div>;
+    }
+  } else {
+    if (!country || !countryGenre || listSongs.length === 0) {
+      return <div></div>;
+    }
+  }
 
   // Determinar el mensaje a mostrar según la categoría (género o artista)
   let message = "";

@@ -3,6 +3,8 @@
 import { useUserData } from "@/context/userContext";
 import { useRouter } from "next/navigation";
 import { getDoc } from "firebase/firestore";
+import { useState } from "react";
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import {
   signInWithGooglePopup,
   createUserDocumentFromAuth,
@@ -16,9 +18,11 @@ export default function Login() {
   const router = useRouter();
   const { isVisible, showToast, toasterProperties, setToasterProperties } =
     useToaster();
+  const [isUserLoading, setIsUserLoading] = useState(false);
 
   // Función para crear un usuario en Firestore o validar si existe
   const logGoogleUser = async () => {
+    setIsUserLoading(true);
     try {
       const { user } = await signInWithGooglePopup();
       setCurrentUser(user);
@@ -28,10 +32,14 @@ export default function Login() {
 
       if (docSnapshot.exists()) {
         const userData = docSnapshot.data();
-
         router.push(genresURL);
+
       }
+      setIsUserLoading(false);
+
+
     } catch (error) {
+      setIsUserLoading(false);
       setToasterProperties({
         toasterMessage: "Ha ocurrido un error al iniciar sesión",
         typeColor: "error",
@@ -40,7 +48,14 @@ export default function Login() {
       setCurrentUser(null);
       console.log("Error al iniciar sesión con Google:", error);
     }
+    setIsUserLoading(false);
   };
+
+  if (isUserLoading) {
+    return <div className="flex justify-center items-center h-screen">
+      <LoadingSpinner />
+    </div>
+  }
 
   return (
     <>

@@ -10,7 +10,6 @@ import {
 import ExploreView from "./exploreView";
 import { useUserData } from "@/context/userContext";
 import RecommendedSongsView from "./recommendedSongsView";
-import Divider from "@/components/Divider/Divider";
 
 export default function Explore() {
   const [categories, setCategories] = useState([]);
