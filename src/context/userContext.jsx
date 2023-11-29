@@ -16,7 +16,7 @@ export const UserProvider = ({ children }) => {
     const unsubscribe = onAuthStateChangedListener(async (user) => {
       setIsUserLoading(true);
       if (user) {
-        setCurrentUser(user);
+        setCurrentUser({ ...user, userCountry: "Venezuela" });
       }
       setIsUserLoading(false);
     });

@@ -9,8 +9,9 @@ const HeroView = ({ title, body, onClick, image, imageBlurData }) => {
         <Image
           src={image}
           alt="Hero Background"
-          layout="fill"
-          objectFit="cover"
+          fill={true}
+          style={{ objectFit: "cover" }}
+          loading="lazy"
           quality={100}
           placeholder="blur"
           blurDataURL={imageBlurData}

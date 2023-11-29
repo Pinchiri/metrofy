@@ -25,7 +25,6 @@ export default function Explore() {
   const [countryGenre, setCountryGenre] = useState([]);
   const [listSongs, setListSongs] = useState([]);
 
-
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -93,6 +92,8 @@ export default function Explore() {
     };
     fetchRecommendedSongs();
   }, [currentUser?.email]);
+
+  console.log(currentUser);
 
   return (
     <>
