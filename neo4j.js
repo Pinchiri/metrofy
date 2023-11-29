@@ -144,6 +144,22 @@ export const createUserFollowsArtist = async (email, artistName) => {
   }
 };
 
+// DELETE USER FAVORITE SONG
+export const deleteFavoriteArtist = async (email, artistName) => {
+  const session = driver.session();
+  try {
+    await session.run(
+      `MATCH (u:User {email: $email})-[f:FOLLOWS]->(a:Artist {name_artist: $artistName})
+             DELETE f;`,
+      { email: email, artistName: artistName }
+    );
+  } catch (error) {
+    console.error("Error al eliminar la relación FOLLOWED:", error);
+  } finally {
+    await session.close();
+  }
+};
+
 // FETCH USER FAVORITE SONGS
 export const getSongsWithFavoritedStatus = async (email) => {
   const session = driver.session();
@@ -155,7 +171,6 @@ export const getSongsWithFavoritedStatus = async (email) => {
       { email }
     );
 
-    console.log(result);
     return result.records.map((record) => {
       return {
         ...record.get("c").properties,
@@ -179,7 +194,7 @@ export const getFavoriteArtists = async (email) => {
              RETURN a, EXISTS((u)-[:FOLLOWS]->(a)) AS followed`,
       { email }
     );
-    console.log(result);
+
     return result.records.map((record) => {
       return {
         ...record.get("a").properties,

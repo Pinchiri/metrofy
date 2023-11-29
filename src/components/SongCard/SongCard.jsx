@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import SongCardView from "./SongCardView";
 import {
   createFavoritedRelationship,
-  deleteFavoritedRelationship,
+  deleteFavoriteArtist,
   listenToSong,
 } from "../../../neo4j";
 
@@ -35,7 +35,7 @@ const SongCard = ({
         });
         showToast();
       } else {
-        const response = await deleteFavoritedRelationship(
+        const response = await deleteFavoriteArtist(
           currentUser?.email,
           song.id
         );

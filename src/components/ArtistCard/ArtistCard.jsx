@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useToaster } from "../Toaster/hooks/useToaster";
 import Toaster from "../Toaster/Toaster";
-import { createUserFollowsArtist } from "../../../neo4j";
+import { createUserFollowsArtist, deleteFavoriteArtist } from "../../../neo4j";
 
 import ArtistCardView from "./ArtistCardView";
 
@@ -19,16 +19,21 @@ const ArtistCard = ({ artist, currentUser }) => {
           artist.name_artist
         );
         setToasterProperties({
-          toasterMessage: "Se ha seguido al artista",
+          toasterMessage: "Se ha comenzado a seguir al artista!",
           typeColor: "success",
         });
         setIsFollowed(!isFollowed);
         showToast();
       } else {
+        const response = await deleteFavoriteArtist(
+          currentUser?.email,
+          artist.name_artist
+        );
         setToasterProperties({
-          toasterMessage: "Ya se sigue al artista",
-          typeColor: "error",
+          toasterMessage: "Se ha dejado de seguir al artista!",
+          typeColor: "success",
         });
+        setIsFollowed(!isFollowed);
         showToast();
       }
     } catch (error) {

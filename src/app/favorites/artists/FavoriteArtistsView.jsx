@@ -32,17 +32,15 @@ const FavoriteArtistsView = ({
 
           <Divider color="none" />
 
-          <div className="flex flex-col justify-center items-center">
-            <div className="text-primary-content w-11/12 py-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-8">
-              {favoriteArtists &&
-                favoriteArtists.map((artist, index) => (
-                  <ArtistCard
-                    key={index}
-                    artist={artist}
-                    currentUser={currentUser}
-                  />
-                ))}
-            </div>
+          <div className="text-primary-content w-11/12 py-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-8">
+            {favoriteArtists &&
+              favoriteArtists.map((artist, index) => (
+                <ArtistCard
+                  key={index}
+                  artist={artist}
+                  currentUser={currentUser}
+                />
+              ))}
           </div>
         </>
       )}
@@ -53,6 +51,7 @@ const FavoriteArtistsView = ({
             <div className="relative h-full w-full">
               <Image
                 src={emptyImage}
+                className="blur-[1px]"
                 alt="Artists Background"
                 fill={true}
                 style={{ objectFit: "cover" }}
