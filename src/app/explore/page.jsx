@@ -58,13 +58,9 @@ export default function Explore() {
             currentUser.email
           );
 
-        console.log(secondGenre);
-        console.log(secondGenreSongs);
-
         if (secondGenre) {
           setSecondFavoriteGenre(secondGenre);
           setSecondRecommendedSongs(secondGenreSongs);
-          console.log(secondGenreSongs);
         }
 
         // ARTISTA FAVORITO
@@ -92,8 +88,6 @@ export default function Explore() {
     };
     fetchRecommendedSongs();
   }, [currentUser?.email]);
-
-  console.log(currentUser);
 
   return (
     <>
