@@ -25,7 +25,6 @@ export default function Explore() {
   const [countryGenre, setCountryGenre] = useState([]);
   const [listSongs, setListSongs] = useState([]);
 
-
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingCat, setIsLoadingCat] = useState(false);
 
@@ -67,7 +66,6 @@ export default function Explore() {
         if (secondGenre) {
           setSecondFavoriteGenre(secondGenre);
           setSecondRecommendedSongs(secondGenreSongs);
-          console.log(secondGenreSongs);
         }
 
         // ARTISTA FAVORITO
