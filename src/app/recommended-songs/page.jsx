@@ -19,6 +19,7 @@ const RecommendedSongs = () => {
     const searchParams = useSearchParams();
     const recomendationType = searchParams.get("recommendation");
     const category = searchParams.get("category");
+    const countryGenre = searchParams.get("countryGenre");
 
     const { currentUser } = useUserData();
     const [isLoading, setIsLoading] = useState(false);
@@ -54,7 +55,7 @@ const RecommendedSongs = () => {
                     setMessage(`¿Te gusta ${favoriteArtist}? Aquí hay más`);
                 }
                 else if (recomendationType === "CountryGenre" && category === "countryGenre") {
-                    const { country: country, countryGenre: countryGenre, listSongs: listSongs } = await getRecommendedSongsBasedOnCountry(currentUser.email);
+                    const { country: country, countryGenre: countryGenre, listSongs: listSongs } = await getSongsByGenre(countryGenre, currentUser.email);
                     setRecommendedSongs(listSongs);
                     setMessage(`Explora lo Mejor de ${countryGenre} Popular en ${country}`);
                 }

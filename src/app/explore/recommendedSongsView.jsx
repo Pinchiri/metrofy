@@ -14,9 +14,11 @@ const RecommendedSongsView = ({
   setRecommendedSongs,
   currentUser,
   isLoading,
-  recommendationType
+  recommendationType,
 }) => {
-
+  // if (!categoryName || songs.length === 0) {
+  //   return <div></div>;
+  // }
 
   // Determinar el mensaje a mostrar según la categoría (género o artista)
   let message = "";
@@ -40,54 +42,49 @@ const RecommendedSongsView = ({
     songsToDisplay = songsToDisplay.slice(0, 4);
   }
 
-
   return (
-    <div className="w-full flex flex-col justify-center mt-8">
+    <div className="w-full flex flex-col justify-center mt-36">
       {isLoading && (
         <div className="w-full max-w-screen flex items-center justify-center">
           <LoadingSpinner />
         </div>
       )}
 
-      {!isLoading &&
-        (
-          <div className="w-full flex flex-col items-center justify-center ">
-            <h1 className="text-5xl font-bold my-4 px-6 text-center">
-              {message}
-            </h1>
+      {!isLoading && (
+        <div className="w-full flex flex-col items-center justify-center ">
+          <h1 className="text-5xl font-bold my-4 px-6 text-center">
+            {message}
+          </h1>
 
-            <Divider color="none" />
+          <Divider color="none" />
 
-            <div className="w-full flex flex-row items-end justify-end pr-14">
-              <Link
-                href={{
-                  pathname: recommendedURL,
-                  query: {
-                    category: category,
-                    recommendation: recommendationType,
-                  },
-                }}
-                key={recommendationType}
-              >
-                <h3 className="text-2xl font-bold my-4 px-6 text-right">
-                  Ver más
-                </h3>
-              </Link>
-            </div>
-
-            <div className="w-full flex flex-col items-center justify-center">
-              <SongsList
-                songsList={songsToDisplay}
-                setEnhancedSongs={setRecommendedSongs}
-                currentUser={currentUser}
-              />
-            </div>
+          <div className="w-full flex flex-row items-end justify-end pr-14">
+            <Link
+              href={{
+                pathname: recommendedURL,
+                query: {
+                  category: category,
+                  recommendation: recommendationType,
+                },
+              }}
+              key={recommendationType}
+            >
+              <h3 className="text-2xl font-bold my-4 px-6 text-right">
+                Ver más
+              </h3>
+            </Link>
           </div>
-        )
-      }
 
-
-    </div >
+          <div className="w-full flex flex-col items-center justify-center">
+            <SongsList
+              songsList={songsToDisplay}
+              setEnhancedSongs={setRecommendedSongs}
+              currentUser={currentUser}
+            />
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 

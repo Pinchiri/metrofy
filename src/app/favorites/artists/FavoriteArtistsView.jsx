@@ -1,11 +1,15 @@
+import ArtistCard from "@/components/ArtistCard/ArtistCard";
 import Divider from "@/components/Divider/Divider";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import SongsList from "@/components/SongsList/SongsList";
+import Image from "next/image";
 import React from "react";
 
-const FavoritesView = ({
-  favoriteSongs,
-  setFavoriteSongs,
+const FavoriteArtistsView = ({
+  favoriteArtists,
+  emptyImage,
+  emptyImageBlurData,
+  setFavoriteArtists,
   currentUser,
   title,
   emptyFavoritesTitle,
@@ -20,7 +24,7 @@ const FavoritesView = ({
           <LoadingSpinner />
         </div>
       )}
-      {favoriteSongs.length > 0 && (
+      {favoriteArtists.length > 0 && (
         <>
           <h1 className="text-5xl font-bold my-4 px-6 text-center leading-snug">
             {title}
@@ -28,19 +32,35 @@ const FavoritesView = ({
 
           <Divider color="none" />
 
-          <div className="w-full flex flex-col items-center justify-center">
-            <SongsList
-              songsList={favoriteSongs}
-              setEnhancedSongs={setFavoriteSongs}
-              currentUser={currentUser}
-            />
+          <div className="text-primary-content w-11/12 py-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-8">
+            {favoriteArtists &&
+              favoriteArtists.map((artist, index) => (
+                <ArtistCard
+                  key={index}
+                  artist={artist}
+                  currentUser={currentUser}
+                />
+              ))}
           </div>
         </>
       )}
-      {!isLoading && favoriteSongs.length < 1 && (
+      {!isLoading && favoriteArtists.length < 1 && (
         <>
           <div className="hero min-h-screen -my-10">
-            <div className="hero-overlay bg-opacity-100"></div>
+            <div className="hero-overlay bg-opacity-60"></div>
+            <div className="relative h-full w-full">
+              <Image
+                src={emptyImage}
+                className="blur-[1px]"
+                alt="Artists Background"
+                fill={true}
+                style={{ objectFit: "cover" }}
+                loading="lazy"
+                quality={100}
+                placeholder="blur"
+                blurDataURL={emptyImageBlurData}
+              />
+            </div>
             <div className="hero-content text-center text-neutral-content">
               <div className="max-w-xl">
                 <h1 className="mb-5 text-3xl lg:text-5xl font-bold">
@@ -72,4 +92,4 @@ const FavoritesView = ({
   );
 };
 
-export default FavoritesView;
+export default FavoriteArtistsView;
