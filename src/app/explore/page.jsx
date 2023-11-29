@@ -51,8 +51,7 @@ export default function Explore() {
       try {
         setIsLoading(true);
         // PRIMER GENERO MAS ESCUCHADO
-        const { genre: firstGenre,
-          songs: firstGenreSongs } =
+        const { genre: firstGenre, songs: firstGenreSongs } =
           await getRecommendedSongsBasedOnFavoriteGenre(currentUser.email);
         setFavoriteGenre(firstGenre);
         setRecommendedSongs(firstGenreSongs);
@@ -100,11 +99,7 @@ export default function Explore() {
   return (
     <>
       <div className="w-full flex flex-col items-center justify-center my-10">
-        <ExploreView
-          categories={categories}
-          isLoading={isLoadingCat} />
-
-        <Divider color="none" />
+        <ExploreView categories={categories} isLoading={isLoadingCat} />
 
         <RecommendedSongsView
           category="genre"
@@ -116,8 +111,6 @@ export default function Explore() {
           recommendationType={"FavoriteGenre"}
         />
 
-        <Divider color="none" />
-
         <RecommendedSongsView
           category="genre"
           setRecommendedSongs={setSecondRecommendedSongs}
@@ -127,9 +120,6 @@ export default function Explore() {
           isLoading={isLoading}
           recommendationType={"SecondFavoriteGenre"}
         />
-
-
-        <Divider color="none" />
 
         <RecommendedSongsView
           category="artist"
@@ -141,7 +131,6 @@ export default function Explore() {
           recommendationType={"FavoriteArtist"}
         />
 
-        <Divider color="none" />
         <RecommendedSongsView
           category="countryGenre"
           currentUser={currentUser}
@@ -152,7 +141,6 @@ export default function Explore() {
           isLoading={isLoading}
           recommendationType={"CountryGenre"}
         />
-
       </div>
     </>
   );

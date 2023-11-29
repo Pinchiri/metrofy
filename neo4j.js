@@ -105,7 +105,7 @@ export const createFavoritedRelationship = async (email, songId) => {
 export const deleteFavoritedRelationship = async (email, songId) => {
   const session = driver.session();
   try {
-    await session.run(
+    const response = await session.run(
       `MATCH (u:User {email: $email})-[f:FAVORITED]->(s:Cancion {id: $songId})
              DELETE f;`,
       { email, songId }
@@ -155,7 +155,23 @@ export const createUserFollowsArtist = async (email, artistName) => {
   }
 };
 
-// FETCH USER FAVORITE SONG
+// DELETE USER FAVORITE SONG
+export const deleteFavoriteArtist = async (email, artistName) => {
+  const session = driver.session();
+  try {
+    await session.run(
+      `MATCH (u:User {email: $email})-[f:FOLLOWS]->(a:Artist {name_artist: $artistName})
+             DELETE f;`,
+      { email: email, artistName: artistName }
+    );
+  } catch (error) {
+    console.error("Error al eliminar la relación FOLLOWED:", error);
+  } finally {
+    await session.close();
+  }
+};
+
+// FETCH USER FAVORITE SONGS
 export const getSongsWithFavoritedStatus = async (email) => {
   const session = driver.session();
   try {
@@ -165,10 +181,35 @@ export const getSongsWithFavoritedStatus = async (email) => {
              RETURN c, EXISTS((u)-[:FAVORITED]->(c)) AS favorited`,
       { email }
     );
+
     return result.records.map((record) => {
       return {
         ...record.get("c").properties,
         favorited: record.get("favorited"),
+      };
+    });
+  } catch (error) {
+    console.error("Error al obtener canciones y estado favorito:", error);
+  } finally {
+    await session.close();
+  }
+};
+
+// FETCH USER FAVORITE ARTISTS
+export const getFavoriteArtists = async (email) => {
+  const session = driver.session();
+  try {
+    const result = await session.run(
+      `MATCH (a:Artist)
+             OPTIONAL MATCH (u:User {email: $email})-[:FOLLOWS]->(a)
+             RETURN a, EXISTS((u)-[:FOLLOWS]->(a)) AS followed`,
+      { email }
+    );
+
+    return result.records.map((record) => {
+      return {
+        ...record.get("a").properties,
+        followed: record.get("followed"),
       };
     });
   } catch (error) {

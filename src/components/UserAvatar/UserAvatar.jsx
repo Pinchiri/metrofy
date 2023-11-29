@@ -1,7 +1,7 @@
 import React from "react";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
-import { myFavoritesURL } from "@/constants/urls";
+import { favoriteArtistsURL, favoriteSongsURL } from "@/constants/urls";
 import Image from "next/image";
 
 const UserAvatar = ({ profilePicture, handleLogout }) => {
@@ -33,9 +33,14 @@ const UserAvatar = ({ profilePicture, handleLogout }) => {
         tabIndex={0}
         className="menu menu-sm dropdown-content mt-3 z-10 p-2 shadow bg-base-100 rounded-box w-52"
       >
-        <Link href={myFavoritesURL}>
+        <Link href={favoriteSongsURL}>
           <li>
-            <p>Mis Favoritos</p>
+            <p>Mis Canciones</p>
+          </li>
+        </Link>
+        <Link href={favoriteArtistsURL}>
+          <li>
+            <p>Mis Artistas</p>
           </li>
         </Link>
         <li>
