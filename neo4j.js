@@ -13,12 +13,20 @@ export default driver;
 const session = driver.session();
 
 //CREATE NEW USER
-export const createNeo4jUser = async (name, email) => {
+export const createNeo4jUser = async (name, email, country) => {
   try {
-    await session.run("CREATE (n:User {name: $name, email: $email})", {
-      name,
-      email,
-    });
+    await session.run(
+      `
+      MERGE (c:Country {name: $country})
+      CREATE (u:User {name: $name, email: $email, country: $country})
+      MERGE (u)-[:LIVES_IN]->(c)
+      `,
+      {
+        name,
+        email,
+        country,
+      }
+    );
   } finally {
     await session.close();
   }
