@@ -1,7 +1,6 @@
 import Divider from "@/components/Divider/Divider";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import { categoriesURL } from "@/constants/urls";
-import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import Link from "next/link";
 
 export default function ExploreView({ categories, isLoading }) {
