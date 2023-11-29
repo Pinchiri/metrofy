@@ -94,7 +94,7 @@ export const createFavoritedRelationship = async (email, songId) => {
 export const deleteFavoritedRelationship = async (email, songId) => {
   const session = driver.session();
   try {
-    await session.run(
+    const response = await session.run(
       `MATCH (u:User {email: $email})-[f:FAVORITED]->(s:Cancion {id: $songId})
              DELETE f;`,
       { email, songId }
