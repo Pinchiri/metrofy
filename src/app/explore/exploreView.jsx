@@ -1,9 +1,18 @@
 import Divider from "@/components/Divider/Divider";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import { categoriesURL } from "@/constants/urls";
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import Link from "next/link";
 
-export default function ExploreView({ categories }) {
+export default function ExploreView({ categories, isLoading }) {
+  if (isLoading) {
+    return (
+      <div className="max-h-screen max-w-screen flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="w-full flex flex-col justify-center items-center">
@@ -13,6 +22,7 @@ export default function ExploreView({ categories }) {
         <Divider color="none" />
 
         <div className="text-primary-content w-11/12 py-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+
           {categories.length || categories ? (
             categories.map((category, index) => (
               <Link

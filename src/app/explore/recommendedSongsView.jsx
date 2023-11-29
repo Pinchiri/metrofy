@@ -1,7 +1,6 @@
 import Divider from "@/components/Divider/Divider";
 import SongsList from "@/components/SongsList/SongsList";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
-import { useEffect } from "react";
 import Link from "next/link";
 import { recommendedURL } from "@/constants/urls";
 
@@ -40,12 +39,12 @@ const RecommendedSongsView = ({
   }
 
   if (songsToDisplay && songsToDisplay.length > 2) {
-    songsToDisplay = songsToDisplay.slice(0, 2);
+    songsToDisplay = songsToDisplay.slice(0, 4);
   }
 
 
   return (
-    <div className="w-full flex flex-col justify-center mt-40">
+    <div className="w-full flex flex-col justify-center mt-8">
       {isLoading && (
         <div className="w-full max-w-screen flex items-center justify-center">
           <LoadingSpinner />
@@ -61,12 +60,13 @@ const RecommendedSongsView = ({
 
             <Divider color="none" />
 
-            <div className="w-full flex flex-row items-end justify-end pr-12">
+            <div className="w-full flex flex-row items-end justify-end pr-14">
               <Link
                 href={{
                   pathname: recommendedURL,
                   query: {
                     category: category,
+                    recommendation: recommendationType,
                   },
                 }}
                 key={recommendationType}

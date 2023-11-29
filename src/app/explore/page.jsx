@@ -76,6 +76,7 @@ export default function Explore() {
           setArtistRecommendedSongs(songs);
         }
 
+        // PAIS
         const { country, countryGenre, listSongs } =
           await getRecommendedSongsBasedOnCountry(currentUser.email);
         if (country) {
@@ -97,7 +98,11 @@ export default function Explore() {
   return (
     <>
       <div className="w-full flex flex-col items-center justify-center my-10">
-        <ExploreView categories={categories} />
+        <ExploreView
+          categories={categories}
+          isLoading={isLoadingCat} />
+
+        <Divider color="none" />
 
         <RecommendedSongsView
           category="genre"
@@ -135,6 +140,16 @@ export default function Explore() {
         />
 
         <Divider color="none" />
+
+        <RecommendedSongsView
+          category="countryGenre"
+          setRecommendedSongs={setListSongs}
+          currentUser={currentUser}
+          categoryName={countryGenre}
+          songs={listSongs}
+          isLoading={isLoading}
+          recommendationType={"CountryGenre"}
+        />
 
       </div>
     </>
