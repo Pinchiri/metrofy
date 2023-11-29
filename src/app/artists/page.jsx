@@ -7,20 +7,24 @@ import ArtistsView from './artistsView';
 import { getArtistsOfTopSongsNotFollowed } from '../../../neo4j';
 
 const Artists = () => {
-    const searchParams = useSearchParams();
+
     const { currentUser } = useUserData();
     const [artists, setArtists] = useState([]);
-
+    const [enhancedArtists, setEnhancedArtists] = useState(artists);
+    
     useEffect(() => {
         async function fetchData() {
             const resultArt = await getArtistsOfTopSongsNotFollowed(currentUser?.email)
-            console.log(resultArt);
-            console.log('hola');
+            setArtists(resultArt);
         }
         fetchData();
     }, [currentUser?.email]);
 
-    return (<ArtistsView/>)
+    useEffect(() => {
+        setEnhancedArtists(artists);
+    }, [artists]);
+
+    return (<ArtistsView artistsList={enhancedArtists} currentUser={currentUser}/>)
 }
 
 export default Artists;
