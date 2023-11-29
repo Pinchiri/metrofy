@@ -84,9 +84,6 @@ export default function Explore() {
           setListSongs(listSongs);
         }
 
-        console.log("recomendation", listSongs);
-        console.log("recomendation 2", secondGenreSongs);
-
         setIsLoading(false);
       } catch (error) {
         console.error("Error al obtener canciones recomendadas:", error);

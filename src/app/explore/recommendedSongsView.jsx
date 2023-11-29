@@ -16,9 +16,9 @@ const RecommendedSongsView = ({
   isLoading,
   recommendationType,
 }) => {
-  if (!categoryName || songs.length === 0) {
-    return <div></div>;
-  }
+  // if (!categoryName || songs.length === 0) {
+  //   return <div></div>;
+  // }
 
   // Determinar el mensaje a mostrar según la categoría (género o artista)
   let message = "";
@@ -27,7 +27,7 @@ const RecommendedSongsView = ({
   } else if (category === "artist") {
     message = `¿Te gusta ${categoryName}? Aquí hay más`;
   } else if (category === "countryGenre") {
-    message = `Explora lo Mejor de ${countryGenre} Popular en ${country}`;
+    message = `Explora lo mejor de ${countryGenre}, Popular en ${country}`;
   }
 
   // Determinar la lista de canciones a mostrar
@@ -59,20 +59,42 @@ const RecommendedSongsView = ({
           <Divider color="none" />
 
           <div className="w-full flex flex-row items-end justify-end pr-14">
-            <Link
-              href={{
-                pathname: recommendedURL,
-                query: {
-                  category: category,
-                  recommendation: recommendationType,
-                },
-              }}
-              key={recommendationType}
-            >
-              <h3 className="text-2xl font-bold my-4 px-6 text-right">
-                Ver más
-              </h3>
-            </Link>
+            {
+              (country && countryGenre) ? (
+                <Link
+                  href={{
+                    pathname: recommendedURL,
+                    query: {
+                      category: category,
+                      recommendation: recommendationType,
+                      country: country,
+                      countryGenre: countryGenre,
+                    }
+                  }}
+                  key={recommendationType}
+                >
+                  <h3 className="text-2xl font-bold my-4 px-6 text-right">
+                    Ver más
+                  </h3>
+                </Link>
+              ) : (
+                <Link
+                  href={{
+                    pathname: recommendedURL,
+                    query: {
+                      category: category,
+                      recommendation: recommendationType,
+                    }
+                  }}
+                  key={recommendationType}
+                >
+                  <h3 className="text-2xl font-bold my-4 px-6 text-right">
+                    Ver más
+                  </h3>
+                </Link>
+              )
+            }
+
           </div>
 
           <div className="w-full flex flex-col items-center justify-center">
